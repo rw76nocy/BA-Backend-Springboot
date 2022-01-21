@@ -1,6 +1,5 @@
 package de.phoenix.wgtest.model.security;
 
-import de.phoenix.wgtest.model.management.PersonRole;
 import de.phoenix.wgtest.model.management.UserPerson;
 
 import javax.persistence.*;

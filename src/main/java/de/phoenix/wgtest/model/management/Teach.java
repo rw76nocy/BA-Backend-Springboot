@@ -5,8 +5,13 @@ import javax.persistence.*;
 @Entity
 public class Teach {
 
-    @EmbeddedId
-    TeachPK id;
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "day_care_id")
+    DayCare dayCare;
 
     @Column(name = "dayCareGroup")
     private String dayCareGroup;
@@ -14,32 +19,21 @@ public class Teach {
     @Column(name = "dayCareTeacher")
     private String dayCareTeacher;
 
-    @ManyToOne
-    @MapsId("childId")
-    @JoinColumn(name = "child_id")
-    Child child;
-
-    @ManyToOne
-    @MapsId("dayCareId")
-    @JoinColumn(name = "day_care_id")
-    DayCare dayCare;
-
     public Teach() {
 
     }
 
-    public Teach(Child child, DayCare dayCare, String dayCareGroup, String dayCareTeacher) {
-        this.child = child;
+    public Teach(DayCare dayCare, String dayCareGroup, String dayCareTeacher) {
         this.dayCare = dayCare;
         this.dayCareGroup = dayCareGroup;
         this.dayCareTeacher = dayCareTeacher;
     }
 
-    public TeachPK getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(TeachPK id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -57,14 +51,6 @@ public class Teach {
 
     public void setDayCareTeacher(String dayCareTeacher) {
         this.dayCareTeacher = dayCareTeacher;
-    }
-
-    public Child getChild() {
-        return child;
-    }
-
-    public void setChild(Child child) {
-        this.child = child;
     }
 
     public DayCare getDayCare() {

@@ -16,7 +16,6 @@ public class Child {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private EGender gender;
 
     @Lob
@@ -32,11 +31,9 @@ public class Child {
     private String lastName;
 
     @Temporal(TemporalType.DATE)
-    @NotBlank
     private Date birthday;
 
     @Temporal(TemporalType.DATE)
-    @NotBlank
     private Date entranceDate;
 
     @Temporal(TemporalType.DATE)
@@ -62,8 +59,12 @@ public class Child {
     @JoinColumn(name = "living_group_id", nullable = true)
     private LivingGroup livingGroup;
 
-    @OneToMany(mappedBy = "child")
-    private Set<Teach> teaches = new HashSet<>();
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional = true, orphanRemoval = true)
+    @JoinColumn(name = "teach_id", nullable = true)
+    private Teach teach;
+
+    /*@OneToMany(mappedBy = "child")
+    private Set<Teach> teaches = new HashSet<>();*/
 
     @OneToMany(mappedBy = "child")
     private Set<Supply> supplies = new HashSet<>();
@@ -86,7 +87,7 @@ public class Child {
 
     public Child(EGender gender, byte[] image, String firstName, String lastName, Date birthday, Date entranceDate,
                  Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup,
-                 Set<Record> records, Set<Teach> teaches, Set<Supply> supplies, Set<Insured> insureds,
+                 Set<Record> records, Teach teach, Set<Supply> supplies, Set<Insured> insureds,
                  Set<AppointmentParticipants> appointmentParticipants, Set<PersonRole> personRoles,
                  Set<InstitutionRole> institutionRoles) {
         this.gender = gender;
@@ -102,7 +103,8 @@ public class Child {
         this.diseases = diseases;
         this.livingGroup = livingGroup;
         this.records = records;
-        this.teaches = teaches;
+        this.teach = teach;
+        //this.teaches = teaches;
         this.supplies = supplies;
         this.insureds = insureds;
         this.appointmentParticipants = appointmentParticipants;
@@ -222,12 +224,20 @@ public class Child {
         this.records = records;
     }
 
-    public Set<Teach> getTeaches() {
+    /*public Set<Teach> getTeaches() {
         return teaches;
     }
 
     public void setTeaches(Set<Teach> teaches) {
         this.teaches = teaches;
+    }*/
+
+    public Teach getTeach() {
+        return teach;
+    }
+
+    public void setTeach(Teach teach) {
+        this.teach = teach;
     }
 
     public Set<Supply> getSupplies() {

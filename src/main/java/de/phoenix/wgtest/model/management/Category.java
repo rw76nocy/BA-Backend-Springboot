@@ -3,6 +3,7 @@ package de.phoenix.wgtest.model.management;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table( name = "Category")
@@ -15,12 +16,16 @@ public class Category {
     @Size(max = 50)
     private String name;
 
+    @OneToOne(mappedBy = "category")
+    private Record record;
+
     public Category() {
 
     }
 
-    public Category(String name) {
+    public Category(String name, Record record) {
         this.name = name;
+        this.record = record;
     }
 
     public Long getId() {
@@ -37,5 +42,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Record getRecord() {
+        return record;
+    }
+
+    public void setRecord(Record record) {
+        this.record = record;
     }
 }
