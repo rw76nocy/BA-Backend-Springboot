@@ -27,12 +27,6 @@ public class Address {
     @Size(max = 100)
     private String city;
 
-    @OneToOne(mappedBy = "address")
-    private Institution institution;
-
-    @OneToOne(mappedBy = "address")
-    private Person person;
-
     public Address() {
 
     }
@@ -82,21 +76,5 @@ public class Address {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public Institution getInstitution() {
-        return institution;
-    }
-
-    public void setInstitution(Institution institution) {
-        this.institution = institution;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 }
