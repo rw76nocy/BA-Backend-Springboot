@@ -25,7 +25,7 @@ public class Record {
     private Category category;
 
     @ManyToOne( fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "child_id", nullable = true)
+    @JoinColumn(name = "child_id", nullable = false)
     private Child child;
 
     public Record() {

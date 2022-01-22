@@ -3,8 +3,8 @@ package de.phoenix.wgtest.model.management;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Institution")
@@ -26,19 +26,19 @@ public class Institution {
     @Size(max = 100)
     private String email;
 
-    @OneToOne( fetch = FetchType.LAZY, optional = false)
+    @OneToOne( fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REFRESH, orphanRemoval = true)
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 
     @OneToMany(mappedBy = "institution")
-    private Set<InstitutionRole> institutionRoles = new HashSet<>();
+    private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Institution() {
 
     }
 
     public Institution(String name, String phone, String email, Address address,
-                       Set<InstitutionRole> institutionRoles) {
+                       List<InstitutionRole> institutionRoles) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -86,11 +86,11 @@ public class Institution {
         this.address = address;
     }
 
-    public Set<InstitutionRole> getInstitutionRoles() {
+    public List<InstitutionRole> getInstitutionRoles() {
         return institutionRoles;
     }
 
-    public void setInstitutionRoles(Set<InstitutionRole> institutionRoles) {
+    public void setInstitutionRoles(List<InstitutionRole> institutionRoles) {
         this.institutionRoles = institutionRoles;
     }
 }

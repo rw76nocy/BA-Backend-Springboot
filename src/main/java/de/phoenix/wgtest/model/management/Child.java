@@ -1,12 +1,9 @@
 package de.phoenix.wgtest.model.management;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity( name = "child")
 @Table( name = "CHILD")
@@ -52,8 +49,8 @@ public class Child {
     @Size( max = 1000)
     private String diseases;
 
-    @OneToMany( mappedBy = "child", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Record> records = new HashSet<>();
+    @OneToMany( mappedBy = "child", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    private List<Record> records = new ArrayList<>();
 
     @ManyToOne( fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "living_group_id", nullable = true)
@@ -63,23 +60,22 @@ public class Child {
     @JoinColumn(name = "teach_id", nullable = true)
     private Teach teach;
 
-    /*@OneToMany(mappedBy = "child")
-    private Set<Teach> teaches = new HashSet<>();*/
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional = true, orphanRemoval = true)
+    @JoinColumn(name = "supply_id", nullable = true)
+    private Supply supply;
+
+    @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional = true, orphanRemoval = true)
+    @JoinColumn(name = "insured_id", nullable = true)
+    private Insured insured;
 
     @OneToMany(mappedBy = "child")
-    private Set<Supply> supplies = new HashSet<>();
+    private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
     @OneToMany(mappedBy = "child")
-    private Set<Insured> insureds = new HashSet<>();
+    private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "child")
-    private Set<AppointmentParticipants> appointmentParticipants = new HashSet<>();
-
-    @OneToMany(mappedBy = "child")
-    private Set<PersonRole> personRoles = new HashSet<>();
-
-    @OneToMany(mappedBy = "child")
-    private Set<InstitutionRole> institutionRoles = new HashSet<>();
+    private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Child() {
 
@@ -87,9 +83,9 @@ public class Child {
 
     public Child(EGender gender, byte[] image, String firstName, String lastName, Date birthday, Date entranceDate,
                  Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup,
-                 Set<Record> records, Teach teach, Set<Supply> supplies, Set<Insured> insureds,
-                 Set<AppointmentParticipants> appointmentParticipants, Set<PersonRole> personRoles,
-                 Set<InstitutionRole> institutionRoles) {
+                 List<Record> records, Teach teach, Supply supply, Insured insured,
+                 List<AppointmentParticipants> appointmentParticipants, List<PersonRole> personRoles,
+                 List<InstitutionRole> institutionRoles) {
         this.gender = gender;
         this.image = image;
         this.firstName = firstName;
@@ -104,9 +100,8 @@ public class Child {
         this.livingGroup = livingGroup;
         this.records = records;
         this.teach = teach;
-        //this.teaches = teaches;
-        this.supplies = supplies;
-        this.insureds = insureds;
+        this.supply = supply;
+        this.insured = insured;
         this.appointmentParticipants = appointmentParticipants;
         this.personRoles = personRoles;
         this.institutionRoles = institutionRoles;
@@ -216,21 +211,13 @@ public class Child {
         this.livingGroup = livingGroup;
     }
 
-    public Set<Record> getRecords() {
+    public List<Record> getRecords() {
         return records;
     }
 
-    public void setRecords(Set<Record> records) {
+    public void setRecords(List<Record> records) {
         this.records = records;
     }
-
-    /*public Set<Teach> getTeaches() {
-        return teaches;
-    }
-
-    public void setTeaches(Set<Teach> teaches) {
-        this.teaches = teaches;
-    }*/
 
     public Teach getTeach() {
         return teach;
@@ -240,43 +227,43 @@ public class Child {
         this.teach = teach;
     }
 
-    public Set<Supply> getSupplies() {
-        return supplies;
+    public Supply getSupply() {
+        return supply;
     }
 
-    public void setSupplies(Set<Supply> supplies) {
-        this.supplies = supplies;
+    public void setSupply(Supply supply) {
+        this.supply = supply;
     }
 
-    public Set<Insured> getInsureds() {
-        return insureds;
+    public Insured getInsured() {
+        return insured;
     }
 
-    public void setInsureds(Set<Insured> insureds) {
-        this.insureds = insureds;
+    public void setInsured(Insured insured) {
+        this.insured = insured;
     }
 
-    public Set<AppointmentParticipants> getAppointmentParticipants() {
+    public List<AppointmentParticipants> getAppointmentParticipants() {
         return appointmentParticipants;
     }
 
-    public void setAppointmentParticipants(Set<AppointmentParticipants> appointmentParticipants) {
+    public void setAppointmentParticipants(List<AppointmentParticipants> appointmentParticipants) {
         this.appointmentParticipants = appointmentParticipants;
     }
 
-    public Set<PersonRole> getPersonRoles() {
+    public List<PersonRole> getPersonRoles() {
         return personRoles;
     }
 
-    public void setPersonRoles(Set<PersonRole> personRoles) {
+    public void setPersonRoles(List<PersonRole> personRoles) {
         this.personRoles = personRoles;
     }
 
-    public Set<InstitutionRole> getInstitutionRoles() {
+    public List<InstitutionRole> getInstitutionRoles() {
         return institutionRoles;
     }
 
-    public void setInstitutionRoles(Set<InstitutionRole> institutionRoles) {
+    public void setInstitutionRoles(List<InstitutionRole> institutionRoles) {
         this.institutionRoles = institutionRoles;
     }
 }

@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import de.phoenix.wgtest.model.embeddable.PersonRolePK;
+
 import javax.persistence.*;
 
 @Entity

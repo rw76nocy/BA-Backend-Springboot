@@ -11,7 +11,7 @@ public class Teach {
 
     @ManyToOne
     @JoinColumn(name = "day_care_id")
-    DayCare dayCare;
+    private DayCare dayCare;
 
     @Column(name = "dayCareGroup")
     private String dayCareGroup;

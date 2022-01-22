@@ -5,8 +5,13 @@ import javax.persistence.*;
 @Entity
 public class Insured {
 
-    @EmbeddedId
-    InsuredPK id;
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "health_insurance_id")
+    private HealthInsurance healthInsurance;
 
     @Column(name = "customer_number")
     private String customerNumber;
@@ -14,33 +19,31 @@ public class Insured {
     @Column(name = "holder")
     private String holder;
 
-    @ManyToOne
-    @MapsId("childId")
-    @JoinColumn(name = "child_id")
-    Child child;
-
-    @ManyToOne
-    @MapsId("healthInsuranceId")
-    @JoinColumn(name = "health_insurance_id")
-    HealthInsurance healthInsurance;
 
     public Insured() {
 
     }
 
-    public Insured(Child child, HealthInsurance healthInsurance, String customerNumber, String holder) {
-        this.child = child;
+    public Insured(HealthInsurance healthInsurance, String customerNumber, String holder) {
         this.healthInsurance = healthInsurance;
         this.customerNumber = customerNumber;
         this.holder = holder;
     }
 
-    public InsuredPK getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(InsuredPK id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public HealthInsurance getHealthInsurance() {
+        return healthInsurance;
+    }
+
+    public void setHealthInsurance(HealthInsurance healthInsurance) {
+        this.healthInsurance = healthInsurance;
     }
 
     public String getCustomerNumber() {
@@ -57,21 +60,5 @@ public class Insured {
 
     public void setHolder(String holder) {
         this.holder = holder;
-    }
-
-    public Child getChild() {
-        return child;
-    }
-
-    public void setChild(Child child) {
-        this.child = child;
-    }
-
-    public HealthInsurance getHealthInsurance() {
-        return healthInsurance;
-    }
-
-    public void setHealthInsurance(HealthInsurance healthInsurance) {
-        this.healthInsurance = healthInsurance;
     }
 }

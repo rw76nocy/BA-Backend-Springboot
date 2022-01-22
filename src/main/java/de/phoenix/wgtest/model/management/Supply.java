@@ -5,37 +5,31 @@ import javax.persistence.*;
 @Entity
 public class Supply {
 
-    @EmbeddedId
-    SupplyPK id;
-
-    @Column(name = "customer_number")
-    private String customerNumber;
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("childId")
-    @JoinColumn(name = "child_id")
-    Child child;
-
-    @ManyToOne
-    @MapsId("foodSupplierId")
     @JoinColumn(name = "food_supplier_id")
-    FoodSupplier foodSupplier;
+    private FoodSupplier foodSupplier;
+
+    @Column(name = "customerNumber")
+    private String customerNumber;
 
     public Supply() {
 
     }
 
-    public Supply(String costumerNumber, Child child, FoodSupplier foodSupplier, String customerNumber) {
-        this.child = child;
+    public Supply(FoodSupplier foodSupplier, String customerNumber) {
         this.foodSupplier = foodSupplier;
         this.customerNumber = customerNumber;
     }
 
-    public SupplyPK getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(SupplyPK id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -45,14 +39,6 @@ public class Supply {
 
     public void setCustomerNumber(String customerNumber) {
         this.customerNumber = customerNumber;
-    }
-
-    public Child getChild() {
-        return child;
-    }
-
-    public void setChild(Child child) {
-        this.child = child;
     }
 
     public FoodSupplier getFoodSupplier() {

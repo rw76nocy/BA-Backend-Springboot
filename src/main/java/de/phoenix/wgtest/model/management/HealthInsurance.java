@@ -1,29 +1,29 @@
 package de.phoenix.wgtest.model.management;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity( name = "healthinsurance")
 @Table( name = "health_insurance")
 public class HealthInsurance extends Institution {
 
     @OneToMany(mappedBy = "healthInsurance")
-    private Set<Insured> insureds = new HashSet<>();
+    private List<Insured> insureds = new ArrayList<>();
 
     public HealthInsurance() {
 
     }
 
-    public HealthInsurance(String name, String phone, String email, Address address, Set<InstitutionRole> institutionRoles) {
+    public HealthInsurance(String name, String phone, String email, Address address, List<InstitutionRole> institutionRoles) {
         super(name, phone, email, address, institutionRoles);
     }
 
-    public Set<Insured> getInsureds() {
+    public List<Insured> getInsureds() {
         return insureds;
     }
 
-    public void setInsureds(Set<Insured> insureds) {
+    public void setInsureds(List<Insured> insureds) {
         this.insureds = insureds;
     }
 }

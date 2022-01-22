@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.model.management;
 
+import de.phoenix.wgtest.model.embeddable.UserPersonPK;
 import de.phoenix.wgtest.model.security.User;
 
 import javax.persistence.*;

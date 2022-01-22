@@ -1,30 +1,30 @@
 package de.phoenix.wgtest.model.management;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity( name = "foodsupplier")
 @Table( name = "food_supplier")
 public class FoodSupplier extends Institution {
 
     @OneToMany(mappedBy = "foodSupplier")
-    private Set<Supply> supplies = new HashSet<>();
+    private List<Supply> supplies = new ArrayList<>();
 
     public FoodSupplier() {
 
     }
 
     public FoodSupplier(String name, String phone, String email, Address address,
-                        Set<InstitutionRole> institutionRoles) {
+                        List<InstitutionRole> institutionRoles) {
         super(name, phone, email, address, institutionRoles);
     }
 
-    public Set<Supply> getSupplies() {
+    public List<Supply> getSupplies() {
         return supplies;
     }
 
-    public void setSupplies(Set<Supply> supplies) {
+    public void setSupplies(List<Supply> supplies) {
         this.supplies = supplies;
     }
 }

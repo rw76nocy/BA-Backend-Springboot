@@ -1,13 +1,9 @@
 package de.phoenix.wgtest.model.management;
 
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table( name = "person")
@@ -36,30 +32,30 @@ public class Person {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
-    @OneToOne( fetch = FetchType.LAZY, optional = false)
+    @OneToOne( fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REFRESH, orphanRemoval = true)
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 
-    @ManyToOne( fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "living_group_id", nullable = true)
     private LivingGroup livingGroup;
 
     @OneToMany(mappedBy = "person")
-    private Set<AppointmentParticipants> appointmentParticipants = new HashSet<>();
+    private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
     @OneToMany(mappedBy = "person")
-    private Set<PersonRole> personRoles = new HashSet<>();
+    private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "person")
-    private Set<UserPerson> userPerson = new HashSet<>();
+    private List<UserPerson> userPerson = new ArrayList<>();
 
     public Person() {
 
     }
 
     public Person(EGender gender, String name, String phone, String fax, String email, Date birthday, Address address,
-                  LivingGroup livingGroup, Set<AppointmentParticipants> appointmentParticipants,
-                  Set<PersonRole> personRoles) {
+                  LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants,
+                  List<PersonRole> personRoles) {
         this.gender = gender;
         this.name = name;
         this.phone = phone;
@@ -144,19 +140,27 @@ public class Person {
         this.livingGroup = livingGroup;
     }
 
-    public Set<AppointmentParticipants> getAppointmentParticipants() {
+    public List<AppointmentParticipants> getAppointmentParticipants() {
         return appointmentParticipants;
     }
 
-    public void setAppointmentParticipants(Set<AppointmentParticipants> appointmentParticipants) {
+    public void setAppointmentParticipants(List<AppointmentParticipants> appointmentParticipants) {
         this.appointmentParticipants = appointmentParticipants;
     }
 
-    public Set<PersonRole> getPersonRoles() {
+    public List<PersonRole> getPersonRoles() {
         return personRoles;
     }
 
-    public void setPersonRoles(Set<PersonRole> personRoles) {
+    public void setPersonRoles(List<PersonRole> personRoles) {
         this.personRoles = personRoles;
+    }
+
+    public List<UserPerson> getUserPerson() {
+        return userPerson;
+    }
+
+    public void setUserPerson(List<UserPerson> userPerson) {
+        this.userPerson = userPerson;
     }
 }

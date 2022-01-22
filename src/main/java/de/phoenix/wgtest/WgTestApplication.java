@@ -11,12 +11,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Example;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 
 @SpringBootApplication
 public class WgTestApplication implements CommandLineRunner {
@@ -70,7 +68,7 @@ public class WgTestApplication implements CommandLineRunner {
 			address = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).get();
 		}
 
-		DayCare dayCare = new DayCare("Kita Leipzig","123456789","kita@mail.de", address, Set.of());
+		DayCare dayCare = new DayCare("Kita Leipzig","123456789","kita@mail.de", address, List.of());
 		if (!dayCareRepository.existsByName(dayCare.getName())) {
 			dayCareRepository.save(dayCare);
 		} else {
@@ -89,6 +87,7 @@ public class WgTestApplication implements CommandLineRunner {
 			child.setGender(EGender.MALE);
 			child.setFirstName("Rico");
 			child.setLastName("Warnke");
+			//Timestamp timestamp = Timestamp.valueOf(LocalDate.of(1990,4,24).atStartOfDay());
 			child.setBirthday(Date.from(LocalDate.of(1990, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC)));
 			child.setEntranceDate(Date.from(LocalDate.of(1990, 4, 25).atStartOfDay().toInstant(ZoneOffset.UTC)));
 			child.setReason("Nur mal so zum testen");
@@ -144,7 +143,7 @@ public class WgTestApplication implements CommandLineRunner {
 			addressRepository.save(address1);
 		}
 
-		DayCare dayCare2 = new DayCare("Kita 2 Leipzig","123456789","kita@mail.de", address1, Set.of());
+		DayCare dayCare2 = new DayCare("Kita 2 Leipzig","123456789","kita@mail.de", address1, List.of());
 		if (dayCareRepository.findByName(dayCare2.getName()).isPresent()) {
 			dayCare2 = dayCareRepository.findByName(dayCare2.getName()).get();
 		} else {
@@ -154,12 +153,14 @@ public class WgTestApplication implements CommandLineRunner {
 		if(childRepository.findByFirstName("Rico").isPresent()) {
 			Child child = childRepository.findByFirstName("Rico").get();
 
-			Teach teach = new Teach();
+			Teach teach = child.getTeach();
 			teach.setDayCare(dayCare2);
 			teach.setDayCareGroup("Sonne");
 			teach.setDayCareTeacher("Fr. Meier");
-			if (teachRepository.findByDayCareAndDayCareGroupAndDayCareTeacher(dayCare2, "Sonne", "Fr. Meier").isPresent()) {
-				teach = teachRepository.findByDayCareAndDayCareGroupAndDayCareTeacher(dayCare2, "Sonne", "Fr. Meier").get();
+			if (teachRepository.findByDayCareAndDayCareGroupAndDayCareTeacher(
+					dayCare2, teach.getDayCareGroup(), teach.getDayCareTeacher()).isPresent()) {
+				teach = teachRepository.findByDayCareAndDayCareGroupAndDayCareTeacher(
+						dayCare2, teach.getDayCareGroup(), teach.getDayCareTeacher()).get();
 			} else {
 				teachRepository.save(teach);
 			}

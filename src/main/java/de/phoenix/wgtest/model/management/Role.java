@@ -3,8 +3,8 @@ package de.phoenix.wgtest.model.management;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table( name = "role")
@@ -22,16 +22,16 @@ public class Role {
     private String specification;
 
     @OneToMany(mappedBy = "role")
-    private Set<PersonRole> personRoles = new HashSet<>();
+    private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "role")
-    private Set<InstitutionRole> institutionRoles = new HashSet<>();
+    private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Role() {
 
     }
 
-    public Role(String type, String specification, Set<PersonRole> personRoles, Set<InstitutionRole> institutionRoles) {
+    public Role(String type, String specification, List<PersonRole> personRoles, List<InstitutionRole> institutionRoles) {
         this.type = type;
         this.specification = specification;
         this.personRoles = personRoles;
@@ -62,19 +62,19 @@ public class Role {
         this.specification = specification;
     }
 
-    public Set<PersonRole> getPersonRoles() {
+    public List<PersonRole> getPersonRoles() {
         return personRoles;
     }
 
-    public void setPersonRoles(Set<PersonRole> personRoles) {
+    public void setPersonRoles(List<PersonRole> personRoles) {
         this.personRoles = personRoles;
     }
 
-    public Set<InstitutionRole> getInstitutionRoles() {
+    public List<InstitutionRole> getInstitutionRoles() {
         return institutionRoles;
     }
 
-    public void setInstitutionRoles(Set<InstitutionRole> institutionRoles) {
+    public void setInstitutionRoles(List<InstitutionRole> institutionRoles) {
         this.institutionRoles = institutionRoles;
     }
 }

@@ -3,9 +3,7 @@ package de.phoenix.wgtest.model.management;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table( name = "Appointment")
@@ -31,14 +29,14 @@ public class Appointment {
     private String location;
 
     @OneToMany(mappedBy = "appointment")
-    private Set<AppointmentParticipants> appointmentParticipants = new HashSet<>();
+    private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
     public Appointment() {
 
     }
 
     public Appointment(Date startDate, Date endDate, String description, String location,
-                       Set<AppointmentParticipants> appointmentParticipants) {
+                       List<AppointmentParticipants> appointmentParticipants) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
@@ -86,11 +84,12 @@ public class Appointment {
         this.location = location;
     }
 
-    public Set<AppointmentParticipants> getAppointmentParticipants() {
+    public List<AppointmentParticipants> getAppointmentParticipants() {
         return appointmentParticipants;
     }
 
-    public void setAppointmentParticipants(Set<AppointmentParticipants> appointmentParticipants) {
+    public void setAppointmentParticipants(List<AppointmentParticipants> appointmentParticipants) {
         this.appointmentParticipants = appointmentParticipants;
     }
 }
+
