@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -18,9 +20,11 @@ public class LivingGroup {
     private String name;
 
     @OneToMany( mappedBy = "livingGroup", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @JsonIgnore
     private List<Child> children = new ArrayList<>();
 
     @OneToMany( mappedBy = "livingGroup", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @JsonIgnore
     private List<Person> employees = new ArrayList<>();
 
     public LivingGroup() {
