@@ -46,6 +46,9 @@ public class WgTestApplication implements CommandLineRunner {
 	@Autowired
 	SupplyRepository supplyRepository;
 
+	@Autowired
+	PersonRepository personRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(WgTestApplication.class, args);
 	}
@@ -168,6 +171,25 @@ public class WgTestApplication implements CommandLineRunner {
 			child.setTeach(teach);
 
 			childRepository.save(child);
+		}
+
+		Person person = new Person();
+		person.setGender(EGender.FEMALE);
+		person.setName("Susanne Dreifke");
+		person.setBirthday(Date.from(LocalDate.of(1967, 7, 18).atStartOfDay().toInstant(ZoneOffset.UTC)));
+
+		Address address2 = addressRepository.findById(1L).get();
+		LivingGroup lg2 = livingGroupRepository.findByName("Phoenix").get();
+
+		person.setPhone("");
+		person.setFax("");
+		person.setEmail("");
+
+		person.setAddress(address2);
+		person.setLivingGroup(lg2);
+
+		if (personRepository.findByName("Susanne Dreifke").isEmpty()) {
+			personRepository.save(person);
 		}
 
 	}

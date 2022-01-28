@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -12,7 +14,6 @@ public class Person {
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
@@ -32,21 +33,24 @@ public class Person {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
-    @OneToOne( fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @OneToOne( fetch = FetchType.EAGER, optional = true, cascade = CascadeType.REFRESH, orphanRemoval = true)
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 
-    @ManyToOne( fetch = FetchType.LAZY, optional = true)
+    @ManyToOne( fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "living_group_id", nullable = true)
     private LivingGroup livingGroup;
 
     @OneToMany(mappedBy = "person")
+    @JsonIgnore
     private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
     @OneToMany(mappedBy = "person")
+    @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "person")
+    @JsonIgnore
     private List<UserPerson> userPerson = new ArrayList<>();
 
     public Person() {
