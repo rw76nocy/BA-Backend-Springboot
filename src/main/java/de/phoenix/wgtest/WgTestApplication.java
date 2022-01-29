@@ -174,7 +174,7 @@ public class WgTestApplication implements CommandLineRunner {
 		}
 
 		Person person = new Person();
-		person.setGender(EGender.FEMALE);
+		person.setGender(EGender.FEMALE.getShortName());
 		person.setName("Susanne Dreifke");
 		person.setBirthday(Date.from(LocalDate.of(1967, 7, 18).atStartOfDay().toInstant(ZoneOffset.UTC)));
 

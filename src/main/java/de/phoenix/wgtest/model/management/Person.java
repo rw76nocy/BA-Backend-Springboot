@@ -14,8 +14,8 @@ public class Person {
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private EGender gender;
+    @NotBlank
+    private String gender;
 
     @NotBlank
     @Size(max = 200)
@@ -57,7 +57,7 @@ public class Person {
 
     }
 
-    public Person(EGender gender, String name, String phone, String fax, String email, Date birthday, Address address,
+    public Person(String gender, String name, String phone, String fax, String email, Date birthday, Address address,
                   LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants,
                   List<PersonRole> personRoles) {
         this.gender = gender;
@@ -80,11 +80,11 @@ public class Person {
         this.id = id;
     }
 
-    public EGender getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(EGender gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
