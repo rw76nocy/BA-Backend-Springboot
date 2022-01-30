@@ -26,7 +26,7 @@ public class Institution {
     @Size(max = 100)
     private String email;
 
-    @OneToOne( fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @ManyToOne( fetch = FetchType.EAGER, optional = true)
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 

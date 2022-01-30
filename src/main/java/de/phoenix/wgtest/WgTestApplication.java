@@ -191,6 +191,5 @@ public class WgTestApplication implements CommandLineRunner {
 		if (personRepository.findByName("Susanne Dreifke").isEmpty()) {
 			personRepository.save(person);
 		}
-
 	}
 }

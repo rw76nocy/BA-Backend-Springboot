@@ -1,6 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -33,7 +34,7 @@ public class Person {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
-    @OneToOne( fetch = FetchType.EAGER, optional = true, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @ManyToOne( fetch = FetchType.EAGER, optional = true)
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 

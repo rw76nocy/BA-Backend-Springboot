@@ -1,8 +1,10 @@
 package de.phoenix.wgtest.controller.management;
 
+import de.phoenix.wgtest.model.management.Address;
 import de.phoenix.wgtest.model.management.LivingGroup;
 import de.phoenix.wgtest.model.management.Person;
 import de.phoenix.wgtest.payload.response.MessageResponse;
+import de.phoenix.wgtest.repository.management.AddressRepository;
 import de.phoenix.wgtest.repository.management.LivingGroupRepository;
 import de.phoenix.wgtest.repository.management.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,12 @@ public class EmployeeController {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    AddressRepository addressRepository;
+
+    @Autowired
+    LivingGroupRepository livingGroupRepository;
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Person> getAllEmployees() {
@@ -33,7 +41,6 @@ public class EmployeeController {
         return all;
     }
 
-    //TODO noch unfertig!!!!
     @PostMapping("/add")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> addEmployee(@Valid @RequestBody Person person) {
@@ -42,20 +49,39 @@ public class EmployeeController {
                     .badRequest()
                     .body(new MessageResponse("Fehler: Dieser Mitarbeiter existiert bereits!"));
         }
+
+        Address address = person.getAddress();
+        if (addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).isEmpty()) {
+            addressRepository.save(address);
+        } else {
+            address = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).get();
+            person.setAddress(address);
+        }
+
+        LivingGroup lg = person.getLivingGroup();
+        if (livingGroupRepository.findByName(lg.getName()).isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Die angegebene Wohngruppe existiert nicht!"));
+        } else {
+            lg = livingGroupRepository.findByName(lg.getName()).get();
+            person.setLivingGroup(lg);
+        }
+
         personRepository.save(person);
         return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich angelegt!"));
     }
 
-    /*@DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
-        if (livingGroupRepository.findById(id).isEmpty()) {
+        if (personRepository.findById(id).isEmpty()) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Fehler: Eine Wohngruppe mit dieser ID existiert nicht!"));
+                    .body(new MessageResponse("Fehler: Eine Person mit dieser ID existiert nicht!"));
         }
 
-        livingGroupRepository.deleteById(id);
-        return ResponseEntity.ok(new MessageResponse("Wohngruppe erfolgreich gelöscht!"));
-    }*/
+        personRepository.deleteById(id);
+        return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich gelöscht!"));
+    }
 }

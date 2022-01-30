@@ -20,11 +20,11 @@ public class Record {
     @Size(max = 1000)
     private String description;
 
-    @OneToOne( fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( fetch = FetchType.EAGER, optional = false)
     @JoinColumn( name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne( fetch = FetchType.LAZY, optional = false)
+    @ManyToOne( fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "child_id", nullable = false)
     private Child child;
 

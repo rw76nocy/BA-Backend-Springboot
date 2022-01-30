@@ -1,8 +1,12 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table( name = "Address")
@@ -26,6 +30,14 @@ public class Address {
     @NotBlank
     @Size(max = 100)
     private String city;
+
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Person> persons = new ArrayList<>();
+
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Institution> institutions = new ArrayList<>();
 
     public Address() {
 
@@ -76,5 +88,21 @@ public class Address {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public List<Person> getPersons() {
+        return persons;
+    }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
+
+    public List<Institution> getInstitutions() {
+        return institutions;
+    }
+
+    public void setInstitutions(List<Institution> institutions) {
+        this.institutions = institutions;
     }
 }
