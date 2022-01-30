@@ -181,7 +181,7 @@ public class WgTestApplication implements CommandLineRunner {
 		Address address2 = addressRepository.findById(1L).get();
 		LivingGroup lg2 = livingGroupRepository.findByName("Phoenix").get();
 
-		person.setPhone("");
+		person.setPhone("123456789");
 		person.setFax("");
 		person.setEmail("");
 

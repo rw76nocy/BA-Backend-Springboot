@@ -72,13 +72,52 @@ public class EmployeeController {
         return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich angelegt!"));
     }
 
+    @PutMapping(value = "/put/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @Valid @RequestBody Person person) {
+        if (personRepository.findById(id).isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Der angegebene Mitarbeiter existiert nicht!"));
+        }
+
+        Person updated = personRepository.findById(id).get();
+        updated.setGender(person.getGender());
+        updated.setName(person.getName());
+        updated.setPhone(person.getPhone());
+        updated.setFax(person.getFax());
+        updated.setEmail(person.getEmail());
+        updated.setBirthday(person.getBirthday());
+
+        Address address = person.getAddress();
+        if (addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).isEmpty()) {
+            addressRepository.save(address);
+        } else {
+            address = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).get();
+        }
+        updated.setAddress(address);
+
+        LivingGroup livingGroup = person.getLivingGroup();
+        if (livingGroupRepository.findByName(livingGroup.getName()).isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Eine Wohngruppe mit diesen Namen existiert nicht!"));
+        } else {
+            livingGroup = livingGroupRepository.findByName(livingGroup.getName()).get();
+        }
+        updated.setLivingGroup(livingGroup);
+        personRepository.save(updated);
+
+        return ResponseEntity.ok(new MessageResponse("Mitarbeiter mit ID: "+id+" erfolgreich bearbeitet!"));
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         if (personRepository.findById(id).isEmpty()) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Fehler: Eine Person mit dieser ID existiert nicht!"));
+                    .body(new MessageResponse("Fehler: Ein Mitarbeiter mit dieser ID existiert nicht!"));
         }
 
         personRepository.deleteById(id);
