@@ -1,26 +1,44 @@
 package de.phoenix.wgtest;
 
+import de.phoenix.wgtest.controller.security.AuthController;
 import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.model.security.EUserRole;
+import de.phoenix.wgtest.model.security.User;
 import de.phoenix.wgtest.model.security.UserRole;
+import de.phoenix.wgtest.payload.request.SignupRequest;
+import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
+import de.phoenix.wgtest.repository.security.UserRepository;
 import de.phoenix.wgtest.repository.security.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Example;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 public class WgTestApplication implements CommandLineRunner {
 
 	@Autowired
 	UserRoleRepository userRoleRepository;
+
+	@Autowired
+	UserRepository userRepository;
+
+	@Autowired
+	AuthController authController;
+
+	@Autowired
+	PasswordEncoder encoder;
 
 	@Autowired
 	AddressRepository addressRepository;
@@ -58,9 +76,19 @@ public class WgTestApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		//create user roles
 		for (EUserRole role : EUserRole.values()) {
-			if (!userRoleRepository.findByName(role).isPresent()) {
+			if (userRoleRepository.findByName(role).isEmpty()) {
 				userRoleRepository.save(new UserRole(role));
 			}
+		}
+
+		//create user admin
+		if (!userRepository.existsByUsername("admin")) {
+			User user = new User("admin", "admin@mail.de", encoder.encode("12345678"));
+
+			Set<UserRole> userRoles = new HashSet<>();
+			userRoles.add(userRoleRepository.findByName(EUserRole.ROLE_ADMIN).get());
+			user.setUserRoles(userRoles);
+			userRepository.save(user);
 		}
 
 		//Run 1

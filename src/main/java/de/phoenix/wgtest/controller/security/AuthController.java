@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.controller.security;
 
+import de.phoenix.wgtest.model.management.Person;
 import de.phoenix.wgtest.model.security.EUserRole;
 import de.phoenix.wgtest.model.security.UserRole;
 import de.phoenix.wgtest.model.security.User;
@@ -7,6 +8,7 @@ import de.phoenix.wgtest.payload.request.LoginRequest;
 import de.phoenix.wgtest.payload.request.SignupRequest;
 import de.phoenix.wgtest.payload.response.JwtResponse;
 import de.phoenix.wgtest.payload.response.MessageResponse;
+import de.phoenix.wgtest.repository.management.PersonRepository;
 import de.phoenix.wgtest.repository.security.UserRoleRepository;
 import de.phoenix.wgtest.repository.security.UserRepository;
 import de.phoenix.wgtest.security.jwt.JwtUtils;
@@ -39,6 +41,9 @@ public class AuthController {
 
     @Autowired
     UserRoleRepository userRoleRepository;
+
+    @Autowired
+    PersonRepository personRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -116,6 +121,24 @@ public class AuthController {
         }
 
         user.setRoles(userRoles);
+
+        if (signUpRequest.getEmployeeId() != null) {
+            Person person;
+            if (personRepository.findById(signUpRequest.getEmployeeId()).isEmpty()) {
+                return ResponseEntity
+                        .badRequest()
+                        .body(new MessageResponse("Fehler: Der Mitarbeiter existiert nicht!"));
+            } else {
+                person = personRepository.findById(signUpRequest.getEmployeeId()).get();
+                if (userRepository.findByPerson(person).isPresent()) {
+                    return ResponseEntity
+                            .badRequest()
+                            .body(new MessageResponse("Fehler: Der Mitarbeiter hat bereits ein Konto"));
+                }
+                user.setPerson(person);
+            }
+        }
+
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Benutzer erfolgreich registriert!"));

@@ -1,6 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.phoenix.wgtest.model.security.User;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -50,9 +51,9 @@ public class Person {
     @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "person")
+    @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<UserPerson> userPerson = new ArrayList<>();
+    private User user;
 
     public Person() {
 
@@ -60,7 +61,7 @@ public class Person {
 
     public Person(String gender, String name, String phone, String fax, String email, Date birthday, Address address,
                   LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants,
-                  List<PersonRole> personRoles) {
+                  User user) {
         this.gender = gender;
         this.name = name;
         this.phone = phone;
@@ -70,7 +71,7 @@ public class Person {
         this.address = address;
         this.livingGroup = livingGroup;
         this.appointmentParticipants = appointmentParticipants;
-        this.personRoles = personRoles;
+        this.user = user;
     }
 
     public Long getId() {
@@ -161,11 +162,11 @@ public class Person {
         this.personRoles = personRoles;
     }
 
-    public List<UserPerson> getUserPerson() {
-        return userPerson;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserPerson(List<UserPerson> userPerson) {
-        this.userPerson = userPerson;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

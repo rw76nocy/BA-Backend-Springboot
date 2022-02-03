@@ -1,6 +1,8 @@
 package de.phoenix.wgtest.model.security;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_roles")
@@ -12,6 +14,9 @@ public class UserRole {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private EUserRole name;
+
+    @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<User> users = new HashSet<>();
 
     public UserRole() {
 
@@ -35,5 +40,13 @@ public class UserRole {
 
     public void setName(EUserRole name) {
         this.name = name;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

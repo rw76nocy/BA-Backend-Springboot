@@ -20,6 +20,8 @@ public class SignupRequest {
     @Size(min = 6, max = 40)
     private String password;
 
+    private Long employeeId;
+
     public String getUsername() {
         return username;
     }
@@ -50,5 +52,13 @@ public class SignupRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 }

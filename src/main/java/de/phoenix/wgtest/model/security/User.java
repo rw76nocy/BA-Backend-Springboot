@@ -1,6 +1,6 @@
 package de.phoenix.wgtest.model.security;
 
-import de.phoenix.wgtest.model.management.UserPerson;
+import de.phoenix.wgtest.model.management.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -33,14 +33,15 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(	name = "user_user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "user_role_id"))
     private Set<UserRole> userRoles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<UserPerson> userPerson = new HashSet<>();
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "person_id", nullable = true)
+    private Person person;
 
     public User() {
     }
@@ -99,11 +100,16 @@ public class User {
         this.userRoles = userRoles;
     }
 
-    public Set<UserPerson> getUserPerson() {
-        return userPerson;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setUserPerson(Set<UserPerson> userPerson) {
-        this.userPerson = userPerson;
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    @PreRemove
+    private void removeRoleEntries() {
+        this.setUserRoles(null);
     }
 }
