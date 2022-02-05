@@ -87,7 +87,7 @@ public class WgTestApplication implements CommandLineRunner {
 
 			Set<UserRole> userRoles = new HashSet<>();
 			userRoles.add(userRoleRepository.findByName(EUserRole.ROLE_ADMIN).get());
-			user.setUserRoles(userRoles);
+			user.setRoles(userRoles);
 			userRepository.save(user);
 		}
 

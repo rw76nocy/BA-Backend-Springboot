@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +18,7 @@ public class UserRole {
     private EUserRole name;
 
     @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 
     public UserRole() {
@@ -48,5 +51,9 @@ public class UserRole {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
     }
 }

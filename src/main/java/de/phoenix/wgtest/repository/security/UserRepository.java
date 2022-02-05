@@ -3,6 +3,7 @@ package de.phoenix.wgtest.repository.security;
 import de.phoenix.wgtest.model.management.Person;
 import de.phoenix.wgtest.model.security.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPerson(Person person);
 
-    /*@Query(value = "delete  from user_user_roles where user_id= :user_id", nativeQuery = true)
-    void deleteRelation(@Param("user_id") Long user_id);*/
+    @Modifying
+    @Query(value="delete from user where id = ?1", nativeQuery = true)
+    void deleteById(Long id);
 }

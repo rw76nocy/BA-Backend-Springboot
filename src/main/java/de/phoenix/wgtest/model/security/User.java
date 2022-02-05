@@ -92,14 +92,6 @@ public class User {
         this.userRoles = userRoles;
     }
 
-    public Set<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(Set<UserRole> userRoles) {
-        this.userRoles = userRoles;
-    }
-
     public Person getPerson() {
         return person;
     }
@@ -108,8 +100,7 @@ public class User {
         this.person = person;
     }
 
-    @PreRemove
-    private void removeRoleEntries() {
-        this.setUserRoles(null);
+    public void removeRole(UserRole role) {
+        userRoles.remove(role);
     }
 }
