@@ -32,7 +32,7 @@ public class LivingGroupController {
     }
 
     @GetMapping("/get/{name}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<LivingGroup> getLivingGroupByName(@PathVariable String name) {
         List<LivingGroup> all = new ArrayList<>();
         if (!livingGroupRepository.findAll().isEmpty()) {

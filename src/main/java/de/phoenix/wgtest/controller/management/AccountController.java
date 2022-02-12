@@ -44,7 +44,7 @@ public class AccountController {
     }
 
     @GetMapping( value = "get/user/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public User getUserById(@PathVariable Long id) {
         User user = null;
         if (userRepository.findById(id).isPresent()) {
