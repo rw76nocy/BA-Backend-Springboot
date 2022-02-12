@@ -31,6 +31,18 @@ public class LivingGroupController {
         return all;
     }
 
+    @GetMapping("/get/{name}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<LivingGroup> getLivingGroupByName(@PathVariable String name) {
+        List<LivingGroup> all = new ArrayList<>();
+        if (!livingGroupRepository.findAll().isEmpty()) {
+            if (livingGroupRepository.findByName(name).isPresent()) {
+                all.add(livingGroupRepository.findByName(name).get());
+            }
+        }
+        return all;
+    }
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> addLivingGroup(@Valid @RequestBody LivingGroup livingGroup) {
