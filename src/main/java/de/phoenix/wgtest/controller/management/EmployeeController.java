@@ -41,17 +41,6 @@ public class EmployeeController {
         return all;
     }
 
-    /*@GetMapping( value = "/get/{livingGroup}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public List<Person> getEmployeesByLivingGroup(@PathVariable String livingGroup) {
-        List<Person> all = new ArrayList<>();
-        if (!personRepository.findAll().isEmpty()) {
-            all = personRepository.findAll();
-            all.removeIf(p -> !p.getLivingGroup().getName().equals(livingGroup));
-        }
-        return all;
-    }*/
-
     @GetMapping( value = "/get/{livingGroup}")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Person> getEmployeesByLivingGroupWithoutAccount(@PathVariable String livingGroup) {
