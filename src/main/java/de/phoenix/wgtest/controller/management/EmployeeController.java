@@ -3,10 +3,13 @@ package de.phoenix.wgtest.controller.management;
 import de.phoenix.wgtest.model.management.Address;
 import de.phoenix.wgtest.model.management.LivingGroup;
 import de.phoenix.wgtest.model.management.Person;
+import de.phoenix.wgtest.model.security.EUserRole;
+import de.phoenix.wgtest.model.security.UserRole;
 import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.AddressRepository;
 import de.phoenix.wgtest.repository.management.LivingGroupRepository;
 import de.phoenix.wgtest.repository.management.PersonRepository;
+import de.phoenix.wgtest.repository.security.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +28,9 @@ public class EmployeeController {
     PersonRepository personRepository;
 
     @Autowired
+    UserRoleRepository userRoleRepository;
+
+    @Autowired
     AddressRepository addressRepository;
 
     @Autowired
@@ -37,6 +43,19 @@ public class EmployeeController {
         if (!personRepository.findAll().isEmpty()) {
             all = personRepository.findAll();
             all.removeIf(p -> p.getLivingGroup() == null);
+        }
+        return all;
+    }
+
+    @GetMapping( value = "/get/all/{livingGroup}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<Person> getEmployeesByLivingGroup(@PathVariable String livingGroup) {
+        List<Person> all = new ArrayList<>();
+        if (!personRepository.findAll().isEmpty()) {
+            all = personRepository.findAll();
+            all.removeIf(p -> !p.getLivingGroup().getName().equals(livingGroup));
+            UserRole role = userRoleRepository.findByName(EUserRole.ROLE_USER).get();
+            all.removeIf(p -> p.getUser() != null && !p.getUser().getRoles().contains(role));
         }
         return all;
     }
