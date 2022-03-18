@@ -1,5 +1,8 @@
 package de.phoenix.wgtest.model.management;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -30,7 +33,8 @@ public class Institution {
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 
-    @OneToMany(mappedBy = "institution")
+    @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Institution() {

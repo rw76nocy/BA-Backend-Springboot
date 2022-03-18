@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class InstitutionRole {
 
     @EmbeddedId
-    InstitutionRolePK id;
+    InstitutionRolePK id = new InstitutionRolePK();
 
     @ManyToOne
     @MapsId("childId")

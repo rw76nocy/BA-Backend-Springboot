@@ -1,6 +1,8 @@
 package de.phoenix.wgtest.model.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,11 +21,11 @@ public class LivingGroup {
     @Size(max = 100)
     private String name;
 
-    @OneToMany( mappedBy = "livingGroup", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @OneToMany( mappedBy = "livingGroup", cascade = CascadeType.REFRESH, orphanRemoval = true)
     @JsonIgnore
     private List<Child> children = new ArrayList<>();
 
-    @OneToMany( mappedBy = "livingGroup", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @OneToMany( mappedBy = "livingGroup", cascade = CascadeType.REFRESH, orphanRemoval = true)
     @JsonIgnore
     private List<Person> employees = new ArrayList<>();
 

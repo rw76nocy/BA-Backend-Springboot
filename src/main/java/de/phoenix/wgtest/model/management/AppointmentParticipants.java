@@ -8,7 +8,7 @@ import javax.persistence.*;
 public class AppointmentParticipants {
 
     @EmbeddedId
-    AppointmentParticipantsPK id;
+    AppointmentParticipantsPK id = new AppointmentParticipantsPK();
 
     @ManyToOne
     @MapsId("childId")

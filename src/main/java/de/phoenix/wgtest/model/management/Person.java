@@ -3,6 +3,8 @@ package de.phoenix.wgtest.model.management;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.phoenix.wgtest.model.security.User;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +18,6 @@ public class Person {
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String gender;
 
     @NotBlank
@@ -43,11 +44,13 @@ public class Person {
     @JoinColumn(name = "living_group_id", nullable = true)
     private LivingGroup livingGroup;
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();
 

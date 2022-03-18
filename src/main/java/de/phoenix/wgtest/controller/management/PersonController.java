@@ -1,14 +1,13 @@
 package de.phoenix.wgtest.controller.management;
 
-import de.phoenix.wgtest.model.management.Address;
-import de.phoenix.wgtest.model.management.LivingGroup;
-import de.phoenix.wgtest.model.management.Person;
+import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.model.security.EUserRole;
 import de.phoenix.wgtest.model.security.UserRole;
 import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.AddressRepository;
 import de.phoenix.wgtest.repository.management.LivingGroupRepository;
 import de.phoenix.wgtest.repository.management.PersonRepository;
+import de.phoenix.wgtest.repository.management.RoleRepository;
 import de.phoenix.wgtest.repository.security.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +17,37 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/test/employees")
-public class EmployeeController {
+@RequestMapping("/api/test/persons")
+public class PersonController {
 
     @Autowired
     PersonRepository personRepository;
 
     @Autowired
-    UserRoleRepository userRoleRepository;
+    RoleRepository roleRepository;
 
-    @Autowired
-    AddressRepository addressRepository;
+    @GetMapping("/get/guardian/all")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<Person> getAllGuardians() {
+        List<Person> all = new ArrayList<>();
+        Optional<Role> optionalRole = roleRepository.findByType(ERole.GUARDIAN);
 
-    @Autowired
-    LivingGroupRepository livingGroupRepository;
+        if (optionalRole.isPresent()) {
+            List<PersonRole> personRoles = optionalRole.get().getPersonRoles();
+            for (PersonRole pr : personRoles) {
+                Person p = pr.getPerson();
+                all.add(p);
+            }
+        }
 
-    @GetMapping("/all")
+        return all;
+    }
+
+    /*@GetMapping("/all")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Person> getAllEmployees() {
         List<Person> all = new ArrayList<>();
@@ -75,7 +86,6 @@ public class EmployeeController {
         List<Person> all = new ArrayList<>();
         if (!personRepository.findAll().isEmpty()) {
             all = personRepository.findAll();
-            all.removeIf(p -> p.getLivingGroup() == null);
             all.removeIf(p -> !p.getLivingGroup().getName().equals(livingGroup));
             UserRole role = userRoleRepository.findByName(EUserRole.ROLE_USER).get();
             all.removeIf(p -> p.getUser() != null && !p.getUser().getRoles().contains(role));
@@ -177,5 +187,5 @@ public class EmployeeController {
 
         personRepository.deleteById(id);
         return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich gelöscht!"));
-    }
+    }*/
 }

@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class Teach {
 
     @ManyToOne
     @JoinColumn(name = "day_care_id")
+    @JsonIgnore
     private DayCare dayCare;
 
     @Column(name = "dayCareGroup")

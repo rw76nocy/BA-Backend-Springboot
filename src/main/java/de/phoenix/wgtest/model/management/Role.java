@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -13,11 +15,10 @@ public class Role {
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size( max = 100)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column( length = 100)
+    private ERole type;
 
-    @NotBlank
     @Size( max = 100)
     private String specification;
 
@@ -31,7 +32,7 @@ public class Role {
 
     }
 
-    public Role(String type, String specification, List<PersonRole> personRoles, List<InstitutionRole> institutionRoles) {
+    public Role(ERole type, String specification, List<PersonRole> personRoles, List<InstitutionRole> institutionRoles) {
         this.type = type;
         this.specification = specification;
         this.personRoles = personRoles;
@@ -46,11 +47,11 @@ public class Role {
         this.id = id;
     }
 
-    public String getType() {
+    public ERole getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ERole type) {
         this.type = type;
     }
 

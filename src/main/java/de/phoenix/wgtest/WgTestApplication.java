@@ -20,16 +20,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootApplication
 public class WgTestApplication implements CommandLineRunner {
 
 	@Autowired
 	UserRoleRepository userRoleRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
 
 	@Autowired
 	UserRepository userRepository;
@@ -45,6 +45,9 @@ public class WgTestApplication implements CommandLineRunner {
 
 	@Autowired
 	InstitutionRepository institutionRepository;
+
+	@Autowired
+	InstitutionRoleRepository institutionRoleRepository;
 
 	@Autowired
 	DayCareRepository dayCareRepository;
@@ -67,6 +70,9 @@ public class WgTestApplication implements CommandLineRunner {
 	@Autowired
 	PersonRepository personRepository;
 
+	@Autowired
+	PersonRoleRepository personRoleRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(WgTestApplication.class, args);
 	}
@@ -78,6 +84,14 @@ public class WgTestApplication implements CommandLineRunner {
 		for (EUserRole role : EUserRole.values()) {
 			if (userRoleRepository.findByName(role).isEmpty()) {
 				userRoleRepository.save(new UserRole(role));
+			}
+		}
+
+		for (ERole role : ERole.values()) {
+			if (roleRepository.findByType(role).isEmpty()) {
+				Role r = new Role();
+				r.setType(role);
+				roleRepository.save(r);
 			}
 		}
 
@@ -118,7 +132,6 @@ public class WgTestApplication implements CommandLineRunner {
 			child.setGender(EGender.MALE);
 			child.setFirstName("Rico");
 			child.setLastName("Warnke");
-			//Timestamp timestamp = Timestamp.valueOf(LocalDate.of(1990,4,24).atStartOfDay());
 			child.setBirthday(Date.from(LocalDate.of(1990, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC)));
 			child.setEntranceDate(Date.from(LocalDate.of(1990, 4, 25).atStartOfDay().toInstant(ZoneOffset.UTC)));
 			child.setReason("Nur mal so zum testen");
@@ -139,6 +152,39 @@ public class WgTestApplication implements CommandLineRunner {
 
 			childRepository.save(child);
 		}
+
+		if (childRepository.findByFirstName("Rico").isPresent()) {
+			Child child1 = childRepository.findByFirstName("Rico").get();
+
+			if (child1.getInstitutionRoles().isEmpty()) {
+				DayCare dayCare1 = dayCareRepository.findByName("Kita Leipzig").get();
+				InstitutionRole iRole = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
+				institutionRoleRepository.save(iRole);
+
+				List<InstitutionRole> roles = child1.getInstitutionRoles();
+				roles.add(iRole);
+				child1.setInstitutionRoles(roles);
+
+				childRepository.save(child1);
+			}
+
+			if (child1.getPersonRoles().isEmpty()) {
+				Person person = new Person();
+				person.setName("Hans Harald");
+				person.setPhone("0123/456789");
+				personRepository.save(person);
+
+				PersonRole pRole = new PersonRole(child1, person, roleRepository.findByType(ERole.GUARDIAN).get());
+				personRoleRepository.save(pRole);
+
+				List<PersonRole> roles = child1.getPersonRoles();
+				roles.add(pRole);
+				child1.setPersonRoles(roles);
+
+				childRepository.save(child1);
+			}
+		}
+
 
 		if(!childRepository.findByFirstName("Josefine").isPresent()) {
 			Child child = new Child();

@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.phoenix.wgtest.model.embeddable.PersonRolePK;
 
 import javax.persistence.*;
@@ -8,11 +9,12 @@ import javax.persistence.*;
 public class PersonRole {
 
     @EmbeddedId
-    PersonRolePK id;
+    PersonRolePK id = new PersonRolePK();
 
     @ManyToOne
     @MapsId("childId")
     @JoinColumn(name = "child_id")
+    @JsonIgnore
     Child child;
 
     @ManyToOne

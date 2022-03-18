@@ -1,5 +1,8 @@
 package de.phoenix.wgtest.model.management;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -52,7 +55,7 @@ public class Child {
     @OneToMany( mappedBy = "child", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
     private List<Record> records = new ArrayList<>();
 
-    @ManyToOne( fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "living_group_id", nullable = true)
     private LivingGroup livingGroup;
 
@@ -68,13 +71,16 @@ public class Child {
     @JoinColumn(name = "insured_id", nullable = true)
     private Insured insured;
 
-    @OneToMany(mappedBy = "child")
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "child")
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<PersonRole> personRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "child")
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Child() {

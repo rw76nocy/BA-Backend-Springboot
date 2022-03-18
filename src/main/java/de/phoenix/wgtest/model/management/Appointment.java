@@ -28,7 +28,7 @@ public class Appointment {
     @Size(max = 200)
     private String location;
 
-    @OneToMany(mappedBy = "appointment")
+    @OneToMany(mappedBy = "appointment", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
     public Appointment() {
