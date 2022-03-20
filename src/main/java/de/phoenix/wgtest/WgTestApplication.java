@@ -184,15 +184,24 @@ public class WgTestApplication implements CommandLineRunner {
 				asd.setPhone("1234/567890");
 				asdRepository.save(asd);
 
+				Person doctor = new Person();
+				doctor.setName("Dr. Hals");
+				doctor.setPhone("0178/46761234");
+				personRepository.save(doctor);
+
 				PersonRole pRole1 = new PersonRole(child1, person, roleRepository.findByType(ERole.GUARDIAN).get());
 				personRoleRepository.save(pRole1);
 
 				PersonRole pRole2 = new PersonRole(child1, asd, roleRepository.findByType(ERole.ASD).get());
 				personRoleRepository.save(pRole2);
 
+				PersonRole pRole3 = new PersonRole(child1, doctor, roleRepository.findByType(ERole.CHILDDOCTOR).get());
+				personRoleRepository.save(pRole3);
+
 				List<PersonRole> roles = child1.getPersonRoles();
 				roles.add(pRole1);
 				roles.add(pRole2);
+				roles.add(pRole3);
 				child1.setPersonRoles(roles);
 
 				childRepository.save(child1);

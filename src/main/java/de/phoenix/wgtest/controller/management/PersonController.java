@@ -73,6 +73,23 @@ public class PersonController {
         return asdRepository.findAll();
     }
 
+    @GetMapping("/get/childdoctor/all")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<Person> getAllChilddoctors() {
+        List<Person> all = new ArrayList<>();
+        Optional<Role> optionalRole = roleRepository.findByType(ERole.CHILDDOCTOR);
+
+        if (optionalRole.isPresent()) {
+            List<PersonRole> personRoles = optionalRole.get().getPersonRoles();
+            for (PersonRole pr : personRoles) {
+                Person p = pr.getPerson();
+                all.add(p);
+            }
+        }
+
+        return all;
+    }
+
     /*@GetMapping("/all")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Person> getAllEmployees() {
