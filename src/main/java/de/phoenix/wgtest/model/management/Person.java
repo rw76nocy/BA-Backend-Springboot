@@ -13,9 +13,10 @@ import java.util.*;
 
 @Entity
 @Table( name = "person")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Person {
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String gender;

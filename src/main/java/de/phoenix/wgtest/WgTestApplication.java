@@ -71,6 +71,9 @@ public class WgTestApplication implements CommandLineRunner {
 	PersonRepository personRepository;
 
 	@Autowired
+	AsdRepository asdRepository;
+
+	@Autowired
 	PersonRoleRepository personRoleRepository;
 
 	public static void main(String[] args) {
@@ -87,6 +90,7 @@ public class WgTestApplication implements CommandLineRunner {
 			}
 		}
 
+		//create roles for person/institution
 		for (ERole role : ERole.values()) {
 			if (roleRepository.findByType(role).isEmpty()) {
 				Role r = new Role();
@@ -174,11 +178,21 @@ public class WgTestApplication implements CommandLineRunner {
 				person.setPhone("0123/456789");
 				personRepository.save(person);
 
-				PersonRole pRole = new PersonRole(child1, person, roleRepository.findByType(ERole.GUARDIAN).get());
-				personRoleRepository.save(pRole);
+				Asd asd = new Asd();
+				asd.setName("Kurt Günther");
+				asd.setYouthoffice("Alt-West");
+				asd.setPhone("1234/567890");
+				asdRepository.save(asd);
+
+				PersonRole pRole1 = new PersonRole(child1, person, roleRepository.findByType(ERole.GUARDIAN).get());
+				personRoleRepository.save(pRole1);
+
+				PersonRole pRole2 = new PersonRole(child1, asd, roleRepository.findByType(ERole.ASD).get());
+				personRoleRepository.save(pRole2);
 
 				List<PersonRole> roles = child1.getPersonRoles();
-				roles.add(pRole);
+				roles.add(pRole1);
+				roles.add(pRole2);
 				child1.setPersonRoles(roles);
 
 				childRepository.save(child1);
