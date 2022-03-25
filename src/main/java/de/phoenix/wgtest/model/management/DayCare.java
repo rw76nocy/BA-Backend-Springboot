@@ -15,7 +15,6 @@ public class DayCare extends Institution {
 
     @OneToMany(mappedBy = "dayCare", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<Teach> teaches = new ArrayList<>();
 
     public DayCare() {

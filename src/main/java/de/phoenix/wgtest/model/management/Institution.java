@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -21,11 +22,9 @@ public class Institution {
     @Size(max = 200)
     private String name;
 
-    @NotBlank
     @Size(max = 100)
     private String phone;
 
-    @NotBlank
     @Size(max = 100)
     private String email;
 
@@ -35,6 +34,7 @@ public class Institution {
 
     @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Institution() {
