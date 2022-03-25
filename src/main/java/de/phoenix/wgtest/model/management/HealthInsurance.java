@@ -1,5 +1,8 @@
 package de.phoenix.wgtest.model.management;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +11,8 @@ import java.util.List;
 @Table( name = "health_insurance")
 public class HealthInsurance extends Institution {
 
-    @OneToMany(mappedBy = "healthInsurance")
+    @OneToMany(mappedBy = "healthInsurance", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Insured> insureds = new ArrayList<>();
 
     public HealthInsurance() {

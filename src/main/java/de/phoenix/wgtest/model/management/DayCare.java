@@ -1,13 +1,11 @@
 package de.phoenix.wgtest.model.management;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity( name = "daycare")
 @Table( name = "day_care")

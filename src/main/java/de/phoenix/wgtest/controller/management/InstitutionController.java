@@ -50,7 +50,7 @@ public class InstitutionController {
         return d;
     }
 
-    /*@GetMapping( value = "/get/healthinsurance/{id}")
+    @GetMapping( value = "/get/healthinsurance/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public HealthInsurance getHealthInsuranceById(@PathVariable Long id) {
         HealthInsurance h = null;
@@ -60,7 +60,7 @@ public class InstitutionController {
         return h;
     }
 
-    @GetMapping( value = "/get/foodsupplier/{id}")
+    /*@GetMapping( value = "/get/foodsupplier/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public FoodSupplier getFoodsupplierById(@PathVariable Long id) {
         FoodSupplier f = null;
@@ -82,13 +82,13 @@ public class InstitutionController {
         return dayCareRepository.findAll();
     }
 
-    /*@GetMapping("/get/healthinsurance/all")
+    @GetMapping("/get/healthinsurance/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<HealthInsurance> getAllHealthinsurances() {
         return healthInsuranceRepository.findAll();
     }
 
-    @GetMapping("/get/foodsupplier/all")
+    /*@GetMapping("/get/foodsupplier/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<FoodSupplier> getAllFoodsuppliers() {
         return foodSupplierRepository.findAll();
