@@ -144,6 +144,13 @@ public class WgTestApplication implements CommandLineRunner {
 			address5 = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address5.getStreet(), address5.getNumber(), address5.getZipCode(), address5.getCity()).get();
 		}
 
+		Address address6 = new Address("Fahrdienststraße", "3", "00027", "Irgendwo");
+		if (!addressRepository.findByStreetAndNumberAndZipCodeAndCity(address6.getStreet(), address6.getNumber(), address6.getZipCode(), address6.getCity()).isPresent()) {
+			addressRepository.save(address6);
+		} else {
+			address6 = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address6.getStreet(), address6.getNumber(), address6.getZipCode(), address6.getCity()).get();
+		}
+
 		DayCare dayCare = new DayCare("Kita Leipzig","123456789","kita@mail.de", address, List.of());
 		if (!dayCareRepository.existsByName(dayCare.getName())) {
 			dayCareRepository.save(dayCare);
@@ -161,6 +168,11 @@ public class WgTestApplication implements CommandLineRunner {
 		FoodSupplier fs = new FoodSupplier("Essen Leipzig", "1111/222222", "essen@leipzig.de", address4, List.of());
 		if (!foodSupplierRepository.existsByName(fs.getName())) {
 			foodSupplierRepository.save(fs);
+		}
+
+		Institution driver = new Institution("Fahrdienst Leipzig", "3333/4444444", "fahrdienst@leipzig.de", address6, List.of());
+		if (!institutionRepository.existsByName(driver.getName())) {
+			institutionRepository.save(driver);
 		}
 
 		if (livingGroupRepository.findByName("Phoenix").isEmpty()) {
@@ -228,22 +240,27 @@ public class WgTestApplication implements CommandLineRunner {
 				DayCare dayCare1 = dayCareRepository.findByName("Kita Leipzig").get();
 				HealthInsurance hi1 = healthInsuranceRepository.findByName("Aok Leipzig").get();
 				FoodSupplier fs2 = foodSupplierRepository.findByName("Essen Leipzig").get();
+				Institution d1 = institutionRepository.findByName("Fahrdienst Leipzig").get();
 
 				/*InstitutionRole iRole1 = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
 				institutionRoleRepository.save(iRole1);*/
 
 				//TODO Problemforschung bei den InstitutonRoles, wenn drin dann lädt es etwa 20s!
-				//Sobald mehr als 1 Eintrag dann hängt es!!!!
+				//TODO Sobald mehr als 1 Eintrag dann hängt es!!!!
 				/*InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByType(ERole.HEALTHINSURANCE).get());
 				institutionRoleRepository.save(iRole2);*/
 
 				/*InstitutionRole iRole3 = new InstitutionRole(child1, fs2, roleRepository.findByType(ERole.FOODSUPPLIER).get());
 				institutionRoleRepository.save(iRole3);*/
 
+				InstitutionRole iRole4 = new InstitutionRole(child1, d1, roleRepository.findByType(ERole.DRIVER).get());
+				institutionRoleRepository.save(iRole4);
+
 				List<InstitutionRole> roles = child1.getInstitutionRoles();
 				/*roles.add(iRole1);*/
 				/*roles.add(iRole2);*/
 				/*roles.add(iRole3);*/
+				roles.add(iRole4);
 				child1.setInstitutionRoles(roles);
 
 				childRepository.save(child1);

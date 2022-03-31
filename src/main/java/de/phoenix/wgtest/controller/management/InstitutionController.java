@@ -15,8 +15,8 @@ import java.util.Optional;
 @RequestMapping("/api/test/institutions")
 public class InstitutionController {
 
-    /*@Autowired
-    InstitutionRepository institutionRepository;*/
+    @Autowired
+    InstitutionRepository institutionRepository;
 
     @Autowired
     DayCareRepository dayCareRepository;
@@ -30,7 +30,7 @@ public class InstitutionController {
     @Autowired
     RoleRepository roleRepository;
 
-    /*@GetMapping( value = "/get/{id}")
+    @GetMapping( value = "/get/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public Institution getInstitutionById(@PathVariable Long id) {
         Institution i = null;
@@ -38,7 +38,7 @@ public class InstitutionController {
             i = institutionRepository.findById(id).get();
         }
         return i;
-    }*/
+    }
 
     @GetMapping( value = "/get/daycare/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -70,11 +70,11 @@ public class InstitutionController {
         return f;
     }
 
-    /*@GetMapping("/get/all")
+    @GetMapping("/get/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Institution> getAllInstitutions() {
         return institutionRepository.findAll();
-    }*/
+    }
 
     @GetMapping("/get/daycare/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -94,7 +94,7 @@ public class InstitutionController {
         return foodSupplierRepository.findAll();
     }
 
-    /*@GetMapping("/get/driver/all")
+    @GetMapping("/get/driver/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Institution> getAllDrivers() {
         List<Institution> all = new ArrayList<>();
@@ -109,7 +109,7 @@ public class InstitutionController {
         }
 
         return all;
-    }*/
+    }
 
     /*@GetMapping("/all")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
