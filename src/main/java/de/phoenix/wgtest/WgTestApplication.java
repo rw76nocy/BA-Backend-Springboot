@@ -137,6 +137,13 @@ public class WgTestApplication implements CommandLineRunner {
 			address4 = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address4.getStreet(), address4.getNumber(), address4.getZipCode(), address4.getCity()).get();
 		}
 
+		Address address5 = new Address("Doktorstraße", "15", "23789", "Leipzig");
+		if (!addressRepository.findByStreetAndNumberAndZipCodeAndCity(address5.getStreet(), address5.getNumber(), address5.getZipCode(), address5.getCity()).isPresent()) {
+			addressRepository.save(address5);
+		} else {
+			address5 = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address5.getStreet(), address5.getNumber(), address5.getZipCode(), address5.getCity()).get();
+		}
+
 		DayCare dayCare = new DayCare("Kita Leipzig","123456789","kita@mail.de", address, List.of());
 		if (!dayCareRepository.existsByName(dayCare.getName())) {
 			dayCareRepository.save(dayCare);
@@ -256,6 +263,7 @@ public class WgTestApplication implements CommandLineRunner {
 
 				Person doctor = new Person();
 				doctor.setName("Dr. Hals");
+				doctor.setAddress(address5);
 				doctor.setPhone("0178/46761234");
 				personRepository.save(doctor);
 
