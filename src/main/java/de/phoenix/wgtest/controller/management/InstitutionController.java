@@ -24,8 +24,8 @@ public class InstitutionController {
     @Autowired
     HealthInsuranceRepository healthInsuranceRepository;
 
-    /*@Autowired
-    FoodSupplierRepository foodSupplierRepository;*/
+    @Autowired
+    FoodSupplierRepository foodSupplierRepository;
 
     @Autowired
     RoleRepository roleRepository;
@@ -60,7 +60,7 @@ public class InstitutionController {
         return h;
     }
 
-    /*@GetMapping( value = "/get/foodsupplier/{id}")
+    @GetMapping( value = "/get/foodsupplier/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public FoodSupplier getFoodsupplierById(@PathVariable Long id) {
         FoodSupplier f = null;
@@ -70,7 +70,7 @@ public class InstitutionController {
         return f;
     }
 
-    @GetMapping("/get/all")
+    /*@GetMapping("/get/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Institution> getAllInstitutions() {
         return institutionRepository.findAll();
@@ -88,13 +88,13 @@ public class InstitutionController {
         return healthInsuranceRepository.findAll();
     }
 
-    /*@GetMapping("/get/foodsupplier/all")
+    @GetMapping("/get/foodsupplier/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<FoodSupplier> getAllFoodsuppliers() {
         return foodSupplierRepository.findAll();
     }
 
-    @GetMapping("/get/driver/all")
+    /*@GetMapping("/get/driver/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Institution> getAllDrivers() {
         List<Institution> all = new ArrayList<>();

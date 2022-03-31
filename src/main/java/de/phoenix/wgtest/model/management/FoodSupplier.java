@@ -1,5 +1,9 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +12,9 @@ import java.util.List;
 @Table( name = "food_supplier")
 public class FoodSupplier extends Institution {
 
-    @OneToMany(mappedBy = "foodSupplier")
+    @OneToMany(mappedBy = "foodSupplier", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<Supply> supplies = new ArrayList<>();
 
     public FoodSupplier() {

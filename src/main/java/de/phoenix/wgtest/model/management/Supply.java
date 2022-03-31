@@ -19,13 +19,17 @@ public class Supply {
     @Column(name = "customerNumber")
     private String customerNumber;
 
+    @Column(name = "pin")
+    private String pin;
+
     public Supply() {
 
     }
 
-    public Supply(FoodSupplier foodSupplier, String customerNumber) {
+    public Supply(FoodSupplier foodSupplier, String customerNumber, String pin) {
         this.foodSupplier = foodSupplier;
         this.customerNumber = customerNumber;
+        this.pin = pin;
     }
 
     public Long getId() {
@@ -42,6 +46,14 @@ public class Supply {
 
     public void setCustomerNumber(String customerNumber) {
         this.customerNumber = customerNumber;
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
 
     public FoodSupplier getFoodSupplier() {
