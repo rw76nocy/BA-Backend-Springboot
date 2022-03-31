@@ -16,7 +16,7 @@ public class Insured {
     @JsonIgnore
     private HealthInsurance healthInsurance;
 
-    @Column(name = "customer_number")
+    @Column(name = "customerNumber")
     private String customerNumber;
 
     @Column(name = "holder")

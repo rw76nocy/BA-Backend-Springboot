@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,6 +13,7 @@ public class Supply {
 
     @ManyToOne
     @JoinColumn(name = "food_supplier_id")
+    @JsonIgnore
     private FoodSupplier foodSupplier;
 
     @Column(name = "customerNumber")

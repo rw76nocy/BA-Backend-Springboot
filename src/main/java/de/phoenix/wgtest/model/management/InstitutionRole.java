@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.phoenix.wgtest.model.embeddable.InstitutionRolePK;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ public class InstitutionRole {
     @ManyToOne
     @MapsId("childId")
     @JoinColumn(name = "child_id")
+    @JsonIgnore
     Child child;
 
     @ManyToOne

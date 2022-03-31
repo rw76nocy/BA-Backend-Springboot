@@ -2,7 +2,6 @@ package de.phoenix.wgtest.model.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.phoenix.wgtest.model.security.User;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 

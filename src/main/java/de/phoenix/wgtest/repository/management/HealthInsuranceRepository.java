@@ -1,6 +1,5 @@
 package de.phoenix.wgtest.repository.management;
 
-import de.phoenix.wgtest.model.management.DayCare;
 import de.phoenix.wgtest.model.management.HealthInsurance;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

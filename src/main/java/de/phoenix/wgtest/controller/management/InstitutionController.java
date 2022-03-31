@@ -15,8 +15,8 @@ import java.util.Optional;
 @RequestMapping("/api/test/institutions")
 public class InstitutionController {
 
-    @Autowired
-    InstitutionRepository institutionRepository;
+    /*@Autowired
+    InstitutionRepository institutionRepository;*/
 
     @Autowired
     DayCareRepository dayCareRepository;
@@ -24,8 +24,8 @@ public class InstitutionController {
     @Autowired
     HealthInsuranceRepository healthInsuranceRepository;
 
-    @Autowired
-    FoodSupplierRepository foodSupplierRepository;
+    /*@Autowired
+    FoodSupplierRepository foodSupplierRepository;*/
 
     @Autowired
     RoleRepository roleRepository;

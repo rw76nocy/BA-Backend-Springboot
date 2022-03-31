@@ -53,6 +53,9 @@ public class WgTestApplication implements CommandLineRunner {
 	DayCareRepository dayCareRepository;
 
 	@Autowired
+	HealthInsuranceRepository healthInsuranceRepository;
+
+	@Autowired
 	ChildRepository childRepository;
 
 	@Autowired
@@ -60,6 +63,9 @@ public class WgTestApplication implements CommandLineRunner {
 
 	@Autowired
 	TeachRepository teachRepository;
+
+	@Autowired
+	InsuredRepository insuredRepository;
 
 	@Autowired
 	FoodSupplierRepository foodSupplierRepository;
@@ -117,11 +123,25 @@ public class WgTestApplication implements CommandLineRunner {
 			address = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).get();
 		}
 
+		Address address3 = new Address("Aok-Straße", "29", "54827", "Krankenkassenstadt");
+		if (!addressRepository.findByStreetAndNumberAndZipCodeAndCity(address3.getStreet(), address3.getNumber(), address3.getZipCode(), address3.getCity()).isPresent()) {
+			addressRepository.save(address3);
+		} else {
+			address3 = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address3.getStreet(), address3.getNumber(), address3.getZipCode(), address3.getCity()).get();
+		}
+
 		DayCare dayCare = new DayCare("Kita Leipzig","123456789","kita@mail.de", address, List.of());
 		if (!dayCareRepository.existsByName(dayCare.getName())) {
 			dayCareRepository.save(dayCare);
 		} else {
 			dayCare = dayCareRepository.findByName(dayCare.getName()).get();
+		}
+
+		HealthInsurance hi = new HealthInsurance("Aok Leipzig", "9876/543210", "aok@leipzig.de", address3, List.of());
+		if (!healthInsuranceRepository.existsByName(hi.getName())) {
+			healthInsuranceRepository.save(hi);
+		} else {
+			hi = healthInsuranceRepository.findByName(hi.getName()).get();
 		}
 
 		if (livingGroupRepository.findByName("Phoenix").isEmpty()) {
@@ -154,6 +174,19 @@ public class WgTestApplication implements CommandLineRunner {
 
 			child.setTeach(teach);
 
+			HealthInsurance hi2 = healthInsuranceRepository.findByName("Aok Leipzig").get();
+			Insured insured = new Insured();
+			insured.setHealthInsurance(hi2);
+			insured.setHolder("Mutter");
+			insured.setCustomerNumber("Abc12345");
+			if (!insuredRepository.findAll().contains(insured)) {
+				insuredRepository.save(insured);
+			} else {
+				insured = insuredRepository.findOne(Example.of(insured)).get();
+			}
+
+			child.setInsured(insured);
+
 			childRepository.save(child);
 		}
 
@@ -162,11 +195,16 @@ public class WgTestApplication implements CommandLineRunner {
 
 			if (child1.getInstitutionRoles().isEmpty()) {
 				DayCare dayCare1 = dayCareRepository.findByName("Kita Leipzig").get();
-				InstitutionRole iRole = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
-				institutionRoleRepository.save(iRole);
+				HealthInsurance hi1 = healthInsuranceRepository.findByName("Aok Leipzig").get();
+
+				InstitutionRole iRole1 = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
+				institutionRoleRepository.save(iRole1);
+
+				/*InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByType(ERole.HEALTHINSURANCE).get());
+				institutionRoleRepository.save(iRole2);*/
 
 				List<InstitutionRole> roles = child1.getInstitutionRoles();
-				roles.add(iRole);
+				roles.add(iRole1);
 				child1.setInstitutionRoles(roles);
 
 				childRepository.save(child1);
