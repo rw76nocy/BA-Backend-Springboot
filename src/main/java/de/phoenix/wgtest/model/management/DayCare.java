@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
