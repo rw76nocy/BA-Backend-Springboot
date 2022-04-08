@@ -32,7 +32,8 @@ public class Institution {
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 
-    @OneToMany(mappedBy = "institution", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    //FETCHTYPE.LAZY hier ganz wichtig!!!!!!!!!
+    @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<InstitutionRole> institutionRoles = new ArrayList<>();

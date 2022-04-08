@@ -247,8 +247,8 @@ public class WgTestApplication implements CommandLineRunner {
 
 				//TODO Problemforschung bei den InstitutonRoles, wenn drin dann lädt es etwa 20s!
 				//TODO Sobald mehr als 1 Eintrag dann hängt es!!!!
-				/*InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByType(ERole.HEALTHINSURANCE).get());
-				institutionRoleRepository.save(iRole2);*/
+				InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByType(ERole.HEALTHINSURANCE).get());
+				institutionRoleRepository.save(iRole2);
 
 				/*InstitutionRole iRole3 = new InstitutionRole(child1, fs2, roleRepository.findByType(ERole.FOODSUPPLIER).get());
 				institutionRoleRepository.save(iRole3);*/
@@ -258,7 +258,7 @@ public class WgTestApplication implements CommandLineRunner {
 
 				List<InstitutionRole> roles = child1.getInstitutionRoles();
 				/*roles.add(iRole1);*/
-				/*roles.add(iRole2);*/
+				roles.add(iRole2);
 				/*roles.add(iRole3);*/
 				roles.add(iRole4);
 				child1.setInstitutionRoles(roles);
