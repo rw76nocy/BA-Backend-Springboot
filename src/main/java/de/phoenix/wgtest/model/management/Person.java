@@ -44,12 +44,13 @@ public class Person {
     @JoinColumn(name = "living_group_id", nullable = true)
     private LivingGroup livingGroup;
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    //Hier auch besser FetchType.Lazy!!! Aber erstmal testen dann!!!
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();

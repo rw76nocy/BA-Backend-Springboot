@@ -245,8 +245,6 @@ public class WgTestApplication implements CommandLineRunner {
 				/*InstitutionRole iRole1 = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
 				institutionRoleRepository.save(iRole1);*/
 
-				//TODO Problemforschung bei den InstitutonRoles, wenn drin dann lädt es etwa 20s!
-				//TODO Sobald mehr als 1 Eintrag dann hängt es!!!!
 				InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByType(ERole.HEALTHINSURANCE).get());
 				institutionRoleRepository.save(iRole2);
 
