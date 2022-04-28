@@ -1,9 +1,11 @@
 package de.phoenix.wgtest.model.management;
 
+import java.util.Arrays;
+
 public enum EGender {
-    MALE("Mann", "m", "männlich"),
-    FEMALE("Frau", "w", "weiblich"),
-    DIVERSE("Divers", "d", "divers");
+    MALE("male", "m", "männlich"),
+    FEMALE("female", "w", "weiblich"),
+    DIVERSE("diverse", "d", "divers");
 
     private final String name;
     private final String shortName;
@@ -25,5 +27,12 @@ public enum EGender {
 
     public String getDescription() {
         return description;
+    }
+
+    public static EGender findByName(String name) {
+        return Arrays.stream(values())
+                .filter(g -> g.getName().equals(name))
+                .findAny()
+                .orElse(null);
     }
 }

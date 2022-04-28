@@ -20,8 +20,8 @@ public class DayCare extends Institution {
     public DayCare() {
     }
 
-    public DayCare(String name, String phone, String email, Address address, List<InstitutionRole> institutionRoles) {
-        super(name, phone, email, address, institutionRoles);
+    public DayCare(String name, String phone, String fax, String email, Address address, List<InstitutionRole> institutionRoles) {
+        super(name, phone, fax, email, address, institutionRoles);
     }
 
     public List<Teach> getTeach() {

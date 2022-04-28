@@ -26,6 +26,9 @@ public class Institution {
     private String phone;
 
     @Size(max = 100)
+    private String fax;
+
+    @Size(max = 100)
     private String email;
 
     @ManyToOne( fetch = FetchType.EAGER, optional = true)
@@ -42,10 +45,11 @@ public class Institution {
 
     }
 
-    public Institution(String name, String phone, String email, Address address,
+    public Institution(String name, String phone, String fax, String email, Address address,
                        List<InstitutionRole> institutionRoles) {
         this.name = name;
         this.phone = phone;
+        this.fax = fax;
         this.email = email;
         this.address = address;
         this.institutionRoles = institutionRoles;
@@ -73,6 +77,14 @@ public class Institution {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 
     public String getEmail() {

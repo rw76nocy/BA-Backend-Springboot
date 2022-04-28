@@ -56,7 +56,7 @@ public class Child {
     private List<Record> records = new ArrayList<>();
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "living_group_id", nullable = true)
+    @JoinColumn(name = "living_group_id")
     private LivingGroup livingGroup;
 
     @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional = true, orphanRemoval = true)

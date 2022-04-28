@@ -98,7 +98,7 @@ public class WgTestApplication implements CommandLineRunner {
 
 		//create roles for person/institution
 		for (ERole role : ERole.values()) {
-			if (roleRepository.findByType(role).isEmpty()) {
+			if (roleRepository.findByTypeAndSpecification(role, null).isEmpty()) {
 				Role r = new Role();
 				r.setType(role);
 				roleRepository.save(r);
@@ -151,26 +151,26 @@ public class WgTestApplication implements CommandLineRunner {
 			address6 = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address6.getStreet(), address6.getNumber(), address6.getZipCode(), address6.getCity()).get();
 		}
 
-		DayCare dayCare = new DayCare("Kita Leipzig","123456789","kita@mail.de", address, List.of());
+		DayCare dayCare = new DayCare("Kita Leipzig","123456789","","kita@mail.de", address, List.of());
 		if (!dayCareRepository.existsByName(dayCare.getName())) {
 			dayCareRepository.save(dayCare);
 		} else {
 			dayCare = dayCareRepository.findByName(dayCare.getName()).get();
 		}
 
-		HealthInsurance hi = new HealthInsurance("Aok Leipzig", "9876/543210", "aok@leipzig.de", address3, List.of());
+		HealthInsurance hi = new HealthInsurance("Aok Leipzig", "9876/543210", "1234/56789", "aok@leipzig.de", address3, List.of());
 		if (!healthInsuranceRepository.existsByName(hi.getName())) {
 			healthInsuranceRepository.save(hi);
 		} else {
 			hi = healthInsuranceRepository.findByName(hi.getName()).get();
 		}
 
-		FoodSupplier fs = new FoodSupplier("Essen Leipzig", "1111/222222", "essen@leipzig.de", address4, List.of());
+		FoodSupplier fs = new FoodSupplier("Essen Leipzig", "1111/222222", "3333/4444444", "essen@leipzig.de", address4, List.of());
 		if (!foodSupplierRepository.existsByName(fs.getName())) {
 			foodSupplierRepository.save(fs);
 		}
 
-		Institution driver = new Institution("Fahrdienst Leipzig", "3333/4444444", "fahrdienst@leipzig.de", address6, List.of());
+		Institution driver = new Institution("Fahrdienst Leipzig", "3333/4444444", "5555/6666666", "fahrdienst@leipzig.de", address6, List.of());
 		if (!institutionRepository.existsByName(driver.getName())) {
 			institutionRepository.save(driver);
 		}
@@ -245,13 +245,13 @@ public class WgTestApplication implements CommandLineRunner {
 				/*InstitutionRole iRole1 = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
 				institutionRoleRepository.save(iRole1);*/
 
-				InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByType(ERole.HEALTHINSURANCE).get());
+				InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByTypeAndSpecification(ERole.HEALTHINSURANCE, null).get());
 				institutionRoleRepository.save(iRole2);
 
 				/*InstitutionRole iRole3 = new InstitutionRole(child1, fs2, roleRepository.findByType(ERole.FOODSUPPLIER).get());
 				institutionRoleRepository.save(iRole3);*/
 
-				InstitutionRole iRole4 = new InstitutionRole(child1, d1, roleRepository.findByType(ERole.DRIVER).get());
+				InstitutionRole iRole4 = new InstitutionRole(child1, d1, roleRepository.findByTypeAndSpecification(ERole.DRIVER, null).get());
 				institutionRoleRepository.save(iRole4);
 
 				List<InstitutionRole> roles = child1.getInstitutionRoles();
@@ -282,13 +282,13 @@ public class WgTestApplication implements CommandLineRunner {
 				doctor.setPhone("0178/46761234");
 				personRepository.save(doctor);
 
-				PersonRole pRole1 = new PersonRole(child1, person, roleRepository.findByType(ERole.GUARDIAN).get());
+				PersonRole pRole1 = new PersonRole(child1, person, roleRepository.findByTypeAndSpecification(ERole.GUARDIAN, null).get());
 				personRoleRepository.save(pRole1);
 
-				PersonRole pRole2 = new PersonRole(child1, asd, roleRepository.findByType(ERole.ASD).get());
+				PersonRole pRole2 = new PersonRole(child1, asd, roleRepository.findByTypeAndSpecification(ERole.ASD, null).get());
 				personRoleRepository.save(pRole2);
 
-				PersonRole pRole3 = new PersonRole(child1, doctor, roleRepository.findByType(ERole.CHILDDOCTOR).get());
+				PersonRole pRole3 = new PersonRole(child1, doctor, roleRepository.findByTypeAndSpecification(ERole.CHILDDOCTOR, null).get());
 				personRoleRepository.save(pRole3);
 
 				List<PersonRole> roles = child1.getPersonRoles();
@@ -336,7 +336,7 @@ public class WgTestApplication implements CommandLineRunner {
 			addressRepository.save(address1);
 		}
 
-		DayCare dayCare2 = new DayCare("Kita 2 Leipzig","123456789","kita@mail.de", address1, List.of());
+		DayCare dayCare2 = new DayCare("Kita 2 Leipzig","123456789","","kita@mail.de", address1, List.of());
 		if (dayCareRepository.findByName(dayCare2.getName()).isPresent()) {
 			dayCare2 = dayCareRepository.findByName(dayCare2.getName()).get();
 		} else {

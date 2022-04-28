@@ -98,7 +98,7 @@ public class InstitutionController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Institution> getAllDrivers() {
         List<Institution> all = new ArrayList<>();
-        Optional<Role> optionalRole = roleRepository.findByType(ERole.DRIVER);
+        Optional<Role> optionalRole = roleRepository.findByTypeAndSpecification(ERole.DRIVER, null);
 
         if (optionalRole.isPresent()) {
             List<InstitutionRole> institutionRoles = optionalRole.get().getInstitutionRoles();

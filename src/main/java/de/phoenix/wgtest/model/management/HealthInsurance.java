@@ -21,8 +21,8 @@ public class HealthInsurance extends Institution {
 
     }
 
-    public HealthInsurance(String name, String phone, String email, Address address, List<InstitutionRole> institutionRoles) {
-        super(name, phone, email, address, institutionRoles);
+    public HealthInsurance(String name, String phone, String fax, String email, Address address, List<InstitutionRole> institutionRoles) {
+        super(name, phone, fax, email, address, institutionRoles);
     }
 
     public List<Insured> getInsureds() {

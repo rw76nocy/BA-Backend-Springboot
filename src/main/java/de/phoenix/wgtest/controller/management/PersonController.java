@@ -54,7 +54,7 @@ public class PersonController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Person> getAllGuardians() {
         List<Person> all = new ArrayList<>();
-        Optional<Role> optionalRole = roleRepository.findByType(ERole.GUARDIAN);
+        Optional<Role> optionalRole = roleRepository.findByTypeAndSpecification(ERole.GUARDIAN, null);
 
         if (optionalRole.isPresent()) {
             List<PersonRole> personRoles = optionalRole.get().getPersonRoles();
@@ -77,7 +77,7 @@ public class PersonController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Person> getAllChilddoctors() {
         List<Person> all = new ArrayList<>();
-        Optional<Role> optionalRole = roleRepository.findByType(ERole.CHILDDOCTOR);
+        Optional<Role> optionalRole = roleRepository.findByTypeAndSpecification(ERole.CHILDDOCTOR, null);
 
         if (optionalRole.isPresent()) {
             List<PersonRole> personRoles = optionalRole.get().getPersonRoles();

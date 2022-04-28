@@ -1,6 +1,8 @@
 package de.phoenix.wgtest.model.management;
 
 public enum ERole {
+    SUPERVISOR1("supervisor1"),
+    SUPERVISOR2("supervisor2"),
     GUARDIAN("guardian"),
     ASD("asd"),
     MOTHER("mother"),
@@ -9,7 +11,11 @@ public enum ERole {
     DAYCARE("daycare"),
     HEALTHINSURANCE("healtinsurance"),
     FOODSUPPLIER("foodsupplier"),
-    DRIVER("driver");
+    DRIVER("driver"),
+    REFERENCE_PERSON("reference_person"),
+    DOCTOR("doctor"),
+    THERAPIST("therapist"),
+    PARTNER("partner");
 
     private final String type;
 
