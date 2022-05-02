@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +88,7 @@ public class ChildrenController {
         child.setGender(EGender.findByName(request.getGender()));
 
         //TODO nachforschen wie man nun mit der URL an das Bild kommt
-        String image = request.getImage();
+        File image = request.getImage();
         /*child.setImage(request.getImage());*/
 
         child.setFirstName(request.getFirstName());

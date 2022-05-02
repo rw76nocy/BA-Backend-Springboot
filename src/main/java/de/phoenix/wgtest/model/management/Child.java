@@ -1,11 +1,13 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.File;
 import java.util.*;
 
 @Entity( name = "child")
@@ -20,7 +22,7 @@ public class Child {
 
     @Lob
     @Column(columnDefinition="BLOB")
-    private byte[] image;
+    private File image;
 
     @NotBlank
     @Size( max = 100)
@@ -39,7 +41,6 @@ public class Child {
     @Temporal(TemporalType.DATE)
     private Date releaseDate;
 
-    @NotBlank
     @Size( max = 1000)
     private String reason;
 
@@ -77,17 +78,19 @@ public class Child {
 
     @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Child() {
 
     }
 
-    public Child(EGender gender, byte[] image, String firstName, String lastName, Date birthday, Date entranceDate,
+    public Child(EGender gender, File image, String firstName, String lastName, Date birthday, Date entranceDate,
                  Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup,
                  List<Record> records, Teach teach, Supply supply, Insured insured,
                  List<AppointmentParticipants> appointmentParticipants, List<PersonRole> personRoles,
@@ -129,11 +132,11 @@ public class Child {
         this.gender = gender;
     }
 
-    public byte[] getImage() {
+    public File getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(File image) {
         this.image = image;
     }
 

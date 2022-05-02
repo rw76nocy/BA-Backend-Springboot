@@ -4,6 +4,7 @@ import de.phoenix.wgtest.model.management.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class CreateChildRequest {
     @NotBlank
     private String gender;
 
-    private String image;
+    private File image;
 
     @NotBlank
     @Size( max = 100)
@@ -32,7 +33,6 @@ public class CreateChildRequest {
 
     private Date releaseDate;
 
-    @NotBlank
     @Size( max = 1000)
     private String reason;
 
@@ -78,7 +78,7 @@ public class CreateChildRequest {
     public CreateChildRequest() {
     }
 
-    public CreateChildRequest(LivingGroup livingGroup, String gender, String image, String firstName, String lastName,
+    public CreateChildRequest(LivingGroup livingGroup, String gender, File image, String firstName, String lastName,
                               Date birthday, Date entranceDate, Date releaseDate, String reason, String care,
                               String visit, String diseases, Person superVisor1, Person superVisor2, Person guardian,
                               Asd asd, Person mother, Person father, Person childdoctor, DayCareRequest dayCare,
@@ -130,11 +130,11 @@ public class CreateChildRequest {
         this.gender = gender;
     }
 
-    public String getImage() {
+    public File getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(File image) {
         this.image = image;
     }
 
