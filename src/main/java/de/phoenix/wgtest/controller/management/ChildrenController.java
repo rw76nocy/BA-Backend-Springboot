@@ -2,6 +2,7 @@ package de.phoenix.wgtest.controller.management;
 
 import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.payload.request.*;
+import de.phoenix.wgtest.payload.response.ChildResponse;
 import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,11 +87,6 @@ public class ChildrenController {
 
         child.setLivingGroup(request.getLivingGroup());
         child.setGender(EGender.findByName(request.getGender()));
-
-        //TODO nachforschen wie man nun mit der URL an das Bild kommt
-        File image = request.getImage();
-        /*child.setImage(request.getImage());*/
-
         child.setFirstName(request.getFirstName());
         child.setLastName(request.getLastName());
         child.setBirthday(request.getBirthday());
@@ -218,7 +214,7 @@ public class ChildrenController {
         child.setInstitutionRoles(iRoles);
 
         childRepository.save(child);
-        return ResponseEntity.ok(new MessageResponse("Kind erfolgreich angelegt!"));
+        return ResponseEntity.ok(new ChildResponse("Kind erfolgreich angelegt!", child.getId()));
     }
 
     private void createSpecifiedPersonsAsRole(List<SpecifiedPersonRequest> persons, ERole eRole, Child child, List<PersonRole> pRoles) {
