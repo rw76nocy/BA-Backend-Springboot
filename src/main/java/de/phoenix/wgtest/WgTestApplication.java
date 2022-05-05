@@ -115,7 +115,14 @@ public class WgTestApplication implements CommandLineRunner {
 			userRepository.save(user);
 		}
 
-		//Run 1
+		//test living group
+		if (livingGroupRepository.findByName("Phoenix").isEmpty()) {
+			LivingGroup lg = new LivingGroup();
+			lg.setName("Phoenix");
+			livingGroupRepository.save(lg);
+		}
+
+		//test address
 		Address address = new Address("Atriumstraße","4","04315","Leipzig");
 		if (!addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).isPresent()) {
 			addressRepository.save(address);
@@ -123,6 +130,27 @@ public class WgTestApplication implements CommandLineRunner {
 			address = addressRepository.findByStreetAndNumberAndZipCodeAndCity(address.getStreet(), address.getNumber(), address.getZipCode(), address.getCity()).get();
 		}
 
+		//test employee
+		Person person = new Person();
+		person.setGender(EGender.FEMALE.getShortName());
+		person.setName("Susanne Dreifke");
+		person.setBirthday(Date.from(LocalDate.of(1967, 7, 18).atStartOfDay().toInstant(ZoneOffset.UTC)));
+
+		Address address2 = addressRepository.findById(1L).get();
+		LivingGroup lg2 = livingGroupRepository.findByName("Phoenix").get();
+
+		person.setPhone("123456789");
+		person.setFax("");
+		person.setEmail("");
+
+		person.setAddress(address2);
+		person.setLivingGroup(lg2);
+
+		if (personRepository.findByName("Susanne Dreifke").isEmpty()) {
+			personRepository.save(person);
+		}
+
+		/*//Run 1
 		Address address3 = new Address("Aok-Straße", "29", "54827", "Krankenkassenstadt");
 		if (!addressRepository.findByStreetAndNumberAndZipCodeAndCity(address3.getStreet(), address3.getNumber(), address3.getZipCode(), address3.getCity()).isPresent()) {
 			addressRepository.save(address3);
@@ -175,11 +203,6 @@ public class WgTestApplication implements CommandLineRunner {
 			institutionRepository.save(driver);
 		}
 
-		if (livingGroupRepository.findByName("Phoenix").isEmpty()) {
-			LivingGroup lg = new LivingGroup();
-			lg.setName("Phoenix");
-			livingGroupRepository.save(lg);
-		}
 		LivingGroup lg1 = livingGroupRepository.findByName("Phoenix").get();
 
 		if(!childRepository.findByFirstName("Rico").isPresent()) {
@@ -242,22 +265,22 @@ public class WgTestApplication implements CommandLineRunner {
 				FoodSupplier fs2 = foodSupplierRepository.findByName("Essen Leipzig").get();
 				Institution d1 = institutionRepository.findByName("Fahrdienst Leipzig").get();
 
-				/*InstitutionRole iRole1 = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
-				institutionRoleRepository.save(iRole1);*/
+				*//*InstitutionRole iRole1 = new InstitutionRole(child1, dayCare1, roleRepository.findByType(ERole.DAYCARE).get());
+				institutionRoleRepository.save(iRole1);*//*
 
 				InstitutionRole iRole2 = new InstitutionRole(child1, hi1, roleRepository.findByTypeAndSpecification(ERole.HEALTHINSURANCE, null).get());
 				institutionRoleRepository.save(iRole2);
 
-				/*InstitutionRole iRole3 = new InstitutionRole(child1, fs2, roleRepository.findByType(ERole.FOODSUPPLIER).get());
-				institutionRoleRepository.save(iRole3);*/
+				*//*InstitutionRole iRole3 = new InstitutionRole(child1, fs2, roleRepository.findByType(ERole.FOODSUPPLIER).get());
+				institutionRoleRepository.save(iRole3);*//*
 
 				InstitutionRole iRole4 = new InstitutionRole(child1, d1, roleRepository.findByTypeAndSpecification(ERole.DRIVER, null).get());
 				institutionRoleRepository.save(iRole4);
 
 				List<InstitutionRole> roles = child1.getInstitutionRoles();
-				/*roles.add(iRole1);*/
+				*//*roles.add(iRole1);*//*
 				roles.add(iRole2);
-				/*roles.add(iRole3);*/
+				*//*roles.add(iRole3);*//*
 				roles.add(iRole4);
 				child1.setInstitutionRoles(roles);
 
@@ -361,25 +384,6 @@ public class WgTestApplication implements CommandLineRunner {
 			child.setTeach(teach);
 
 			childRepository.save(child);
-		}
-
-		Person person = new Person();
-		person.setGender(EGender.FEMALE.getShortName());
-		person.setName("Susanne Dreifke");
-		person.setBirthday(Date.from(LocalDate.of(1967, 7, 18).atStartOfDay().toInstant(ZoneOffset.UTC)));
-
-		Address address2 = addressRepository.findById(1L).get();
-		LivingGroup lg2 = livingGroupRepository.findByName("Phoenix").get();
-
-		person.setPhone("123456789");
-		person.setFax("");
-		person.setEmail("");
-
-		person.setAddress(address2);
-		person.setLivingGroup(lg2);
-
-		if (personRepository.findByName("Susanne Dreifke").isEmpty()) {
-			personRepository.save(person);
-		}
+		}*/
 	}
 }
