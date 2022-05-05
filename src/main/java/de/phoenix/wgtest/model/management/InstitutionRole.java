@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class InstitutionRole {
 
     @EmbeddedId
+    @JsonIgnore
     InstitutionRolePK id = new InstitutionRolePK();
 
     @ManyToOne
