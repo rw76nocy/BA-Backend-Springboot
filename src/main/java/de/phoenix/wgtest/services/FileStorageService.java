@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -22,8 +24,12 @@ public class FileStorageService {
         return fileDBRepository.save(fileDB);
     }
 
-    public FileDB getFile(String id) {
-        return fileDBRepository.findById(id).get();
+    public FileDB getFile(Long childId) {
+        Optional<FileDB> opt = fileDBRepository.findByChildId(childId);
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+        return null;
     }
 
     public Stream<FileDB> getAllFiles() {

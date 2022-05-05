@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class PersonRole {
 
     @EmbeddedId
+    @JsonIgnore
     PersonRolePK id = new PersonRolePK();
 
     @ManyToOne

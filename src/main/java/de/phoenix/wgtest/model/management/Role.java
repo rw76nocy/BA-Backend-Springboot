@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -20,9 +22,11 @@ public class Role {
     private String specification;
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "role")
+    @JsonIgnore
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Role() {

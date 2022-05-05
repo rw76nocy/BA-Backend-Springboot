@@ -56,12 +56,15 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
-    @GetMapping("/file/{id}")
+    @GetMapping("/file/{childId}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-        FileDB fileDB = storageService.getFile(id);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
-                .body(fileDB.getData());
+    public ResponseEntity<?> getFile(@PathVariable Long childId) {
+        FileDB fileDB = storageService.getFile(childId);
+        if (fileDB != null) {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
+                    .body(fileDB.getData());
+        }
+        return ResponseEntity.ok(new MessageResponse("Kein Bild vorhanden!"));
     }
 }

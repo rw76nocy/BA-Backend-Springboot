@@ -78,12 +78,10 @@ public class Child {
 
     @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<PersonRole> personRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 
     public Child() {

@@ -102,8 +102,8 @@ public class ChildrenController {
         List<PersonRole> pRoles = new ArrayList<>();
         List<InstitutionRole> iRoles = new ArrayList<>();
 
-        if (request.getSuperVisor1().getName() != null) {
-            Optional<Person> opt1 = personRepository.findByName(request.getSuperVisor1().getName());
+        if (request.getSuperVisor1() != null) {
+            Optional<Person> opt1 = personRepository.findByName(request.getSuperVisor1());
             if (opt1.isPresent()) {
                 PersonRole pRole = new PersonRole(child, opt1.get(), roleRepository.findByTypeAndSpecification(ERole.SUPERVISOR1, null).get());
                 personRoleRepository.save(pRole);
@@ -111,8 +111,8 @@ public class ChildrenController {
             }
         }
 
-        if (request.getSuperVisor2().getName() != null) {
-            Optional<Person> opt2 = personRepository.findByName(request.getSuperVisor2().getName());
+        if (request.getSuperVisor2() != null) {
+            Optional<Person> opt2 = personRepository.findByName(request.getSuperVisor2());
             if (opt2.isPresent()) {
                 PersonRole pRole = new PersonRole(child, opt2.get(), roleRepository.findByTypeAndSpecification(ERole.SUPERVISOR2, null).get());
                 personRoleRepository.save(pRole);
@@ -129,7 +129,7 @@ public class ChildrenController {
         }
 
         if (request.getAsd().getName() != null) {
-            Person asd = createOrLoadPerson(request.getAsd());
+            Person asd = createOrLoadAsd(request.getAsd());
 
             PersonRole pRole = new PersonRole(child, asd, roleRepository.findByTypeAndSpecification(ERole.ASD, null).get());
             personRoleRepository.save(pRole);
@@ -256,16 +256,9 @@ public class ChildrenController {
 
     private Person createOrLoadPerson(Person p) {
         Person person = null;
-        if (p instanceof Asd) {
-            Optional<Asd> optAsd = asdRepository.findByName(p.getName());
-            if (optAsd.isPresent()) {
-                person = optAsd.get();
-            }
-        } else {
-            Optional<Person> optPerson = personRepository.findByName(p.getName());
-            if (optPerson.isPresent()) {
-                person = optPerson.get();
-            }
+        Optional<Person> optPerson = personRepository.findByName(p.getName());
+        if (optPerson.isPresent()) {
+            person = optPerson.get();
         }
 
         if (person == null) {
@@ -283,15 +276,34 @@ public class ChildrenController {
         person.setFax(p.getFax());
         person.setEmail(p.getEmail());
 
-        if (p instanceof Asd) {
-            Asd asd = (Asd) person;
-            asd.setYouthoffice(((Asd) p).getYouthoffice());
-            asdRepository.save(asd);
-            return asd;
-        } else {
-            personRepository.save(person);
-            return person;
+        personRepository.save(person);
+        return person;
+    }
+
+    private Asd createOrLoadAsd(Asd a) {
+        Asd asd = null;
+        Optional<Asd> optAsd = asdRepository.findByName(a.getName());
+        if (optAsd.isPresent()) {
+            asd = optAsd.get();
         }
+
+        if (asd == null) {
+            asd = new Asd();
+            asd.setName(a.getName());
+        }
+
+        Address address = getAddressOrNull(a.getAddress());
+        if (address != null) {
+            asd.setAddress(address);
+        }
+
+        asd.setBirthday(a.getBirthday());
+        asd.setPhone(a.getPhone());
+        asd.setFax(a.getFax());
+        asd.setEmail(a.getEmail());
+        asd.setYouthoffice(a.getYouthoffice());
+        asdRepository.save(asd);
+        return asd;
     }
 
     private Institution createOrLoadInstitution(SpecifiedInstitutionRequest sir) {

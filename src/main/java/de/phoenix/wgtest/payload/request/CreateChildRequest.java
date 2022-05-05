@@ -42,9 +42,9 @@ public class CreateChildRequest {
     @Size( max = 1000)
     private String diseases;
 
-    private Person superVisor1;
+    private String superVisor1;
 
-    private Person superVisor2;
+    private String superVisor2;
 
     private Person guardian;
 
@@ -77,7 +77,7 @@ public class CreateChildRequest {
 
     public CreateChildRequest(LivingGroup livingGroup, String gender, String firstName, String lastName,
                               Date birthday, Date entranceDate, Date releaseDate, String reason, String care,
-                              String visit, String diseases, Person superVisor1, Person superVisor2, Person guardian,
+                              String visit, String diseases, String superVisor1, String superVisor2, Person guardian,
                               Asd asd, Person mother, Person father, Person childdoctor, DayCareRequest dayCare,
                               HealthInsuranceRequest healthInsurance, FoodSupplierRequest foodSupplier, Institution driver,
                               List<SpecifiedPersonRequest> referencePersons, List<SpecifiedPersonRequest> doctors,
@@ -198,19 +198,19 @@ public class CreateChildRequest {
         this.diseases = diseases;
     }
 
-    public Person getSuperVisor1() {
+    public String getSuperVisor1() {
         return superVisor1;
     }
 
-    public void setSuperVisor1(Person superVisor1) {
+    public void setSuperVisor1(String superVisor1) {
         this.superVisor1 = superVisor1;
     }
 
-    public Person getSuperVisor2() {
+    public String getSuperVisor2() {
         return superVisor2;
     }
 
-    public void setSuperVisor2(Person superVisor2) {
+    public void setSuperVisor2(String superVisor2) {
         this.superVisor2 = superVisor2;
     }
 
