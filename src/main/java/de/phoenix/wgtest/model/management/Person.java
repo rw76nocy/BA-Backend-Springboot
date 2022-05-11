@@ -13,7 +13,7 @@ import java.util.*;
 @Entity
 @Table( name = "person")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Person {
+public class Person implements ReferenceObject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -63,16 +63,20 @@ public class Person {
 
     }
 
-    public Person(String gender, String name, String phone, String fax, String email, Date birthday, Address address,
-                  LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants,
-                  User user) {
-        this.gender = gender;
+    public Person(String name, String phone, String fax, String email, Date birthday, Address address) {
         this.name = name;
         this.phone = phone;
         this.fax = fax;
         this.email = email;
         this.birthday = birthday;
         this.address = address;
+    }
+
+    public Person(String gender, String name, String phone, String fax, String email, Date birthday, Address address,
+                  LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants,
+                  User user) {
+        this(name, phone, fax, email, birthday, address);
+        this.gender = gender;
         this.livingGroup = livingGroup;
         this.appointmentParticipants = appointmentParticipants;
         this.user = user;

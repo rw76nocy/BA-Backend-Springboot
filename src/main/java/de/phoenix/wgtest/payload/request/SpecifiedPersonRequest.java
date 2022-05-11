@@ -1,10 +1,12 @@
 package de.phoenix.wgtest.payload.request;
 
 import de.phoenix.wgtest.model.management.Address;
+import de.phoenix.wgtest.model.management.Person;
+import de.phoenix.wgtest.model.management.ReferenceObject;
 
 import java.util.Date;
 
-public class SpecifiedPersonRequest {
+public class SpecifiedPersonRequest implements ReferenceObject {
 
     private String type;
     private String name;
@@ -81,5 +83,9 @@ public class SpecifiedPersonRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Person getPerson() {
+        return new Person(name, phone, fax, email, birthday, address);
     }
 }

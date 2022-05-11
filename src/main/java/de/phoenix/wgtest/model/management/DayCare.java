@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity( name = "daycare")
 @Table( name = "day_care")
-public class DayCare extends Institution {
+public class DayCare extends Institution implements ReferenceObject {
 
     @OneToMany(mappedBy = "dayCare", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -18,6 +18,10 @@ public class DayCare extends Institution {
     private List<Teach> teaches = new ArrayList<>();
 
     public DayCare() {
+    }
+
+    public DayCare(String name, String phone, String fax, String email, Address address) {
+        super(name, phone, fax, email, address);
     }
 
     public DayCare(String name, String phone, String fax, String email, Address address, List<InstitutionRole> institutionRoles) {

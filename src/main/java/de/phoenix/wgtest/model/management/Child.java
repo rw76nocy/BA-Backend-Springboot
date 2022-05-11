@@ -20,10 +20,6 @@ public class Child {
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
-    @Lob
-    @Column(columnDefinition="BLOB")
-    private File image;
-
     @NotBlank
     @Size( max = 100)
     private String firstName;
@@ -88,13 +84,9 @@ public class Child {
 
     }
 
-    public Child(EGender gender, File image, String firstName, String lastName, Date birthday, Date entranceDate,
-                 Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup,
-                 List<Record> records, Teach teach, Supply supply, Insured insured,
-                 List<AppointmentParticipants> appointmentParticipants, List<PersonRole> personRoles,
-                 List<InstitutionRole> institutionRoles) {
+    public Child(EGender gender, String firstName, String lastName, Date birthday, Date entranceDate,
+                 Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup) {
         this.gender = gender;
-        this.image = image;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
@@ -105,6 +97,14 @@ public class Child {
         this.visit = visit;
         this.diseases = diseases;
         this.livingGroup = livingGroup;
+    }
+
+    public Child(EGender gender,  String firstName, String lastName, Date birthday, Date entranceDate,
+                 Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup,
+                 List<Record> records, Teach teach, Supply supply, Insured insured,
+                 List<AppointmentParticipants> appointmentParticipants, List<PersonRole> personRoles,
+                 List<InstitutionRole> institutionRoles) {
+        this(gender, firstName, lastName, birthday, entranceDate, releaseDate, reason, care, visit, diseases, livingGroup);
         this.records = records;
         this.teach = teach;
         this.supply = supply;
@@ -128,14 +128,6 @@ public class Child {
 
     public void setGender(EGender gender) {
         this.gender = gender;
-    }
-
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
     }
 
     public String getFirstName() {

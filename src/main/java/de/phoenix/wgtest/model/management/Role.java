@@ -33,9 +33,13 @@ public class Role {
 
     }
 
-    public Role(ERole type, String specification, List<PersonRole> personRoles, List<InstitutionRole> institutionRoles) {
+    public Role(ERole type, String specification) {
         this.type = type;
         this.specification = specification;
+    }
+
+    public Role(ERole type, String specification, List<PersonRole> personRoles, List<InstitutionRole> institutionRoles) {
+        this(type, specification);
         this.personRoles = personRoles;
         this.institutionRoles = institutionRoles;
     }

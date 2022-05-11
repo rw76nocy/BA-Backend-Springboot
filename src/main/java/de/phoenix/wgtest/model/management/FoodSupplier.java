@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity( name = "foodsupplier")
 @Table( name = "food_supplier")
-public class FoodSupplier extends Institution {
+public class FoodSupplier extends Institution implements ReferenceObject {
 
     @OneToMany(mappedBy = "foodSupplier", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -19,6 +19,10 @@ public class FoodSupplier extends Institution {
 
     public FoodSupplier() {
 
+    }
+
+    public FoodSupplier(String name, String phone, String fax, String email, Address address) {
+        super(name, phone, fax, email, address);
     }
 
     public FoodSupplier(String name, String phone, String fax, String email, Address address,

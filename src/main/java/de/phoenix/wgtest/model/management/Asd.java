@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity( name = "asd")
 @Table( name = "asd")
-public class Asd extends Person {
+public class Asd extends Person implements ReferenceObject {
 
     private String youthoffice;
 

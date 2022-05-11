@@ -1,8 +1,10 @@
 package de.phoenix.wgtest.payload.request;
 
 import de.phoenix.wgtest.model.management.Address;
+import de.phoenix.wgtest.model.management.DayCare;
+import de.phoenix.wgtest.model.management.ReferenceObject;
 
-public class DayCareRequest extends SpecifiedInstitutionRequest {
+public class DayCareRequest extends SpecifiedInstitutionRequest implements ReferenceObject {
 
     private String teacher;
     private String group;
@@ -30,5 +32,9 @@ public class DayCareRequest extends SpecifiedInstitutionRequest {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public DayCare getDayCare() {
+        return new DayCare(getName(), getPhone(), getFax(), getEmail(), getAddress());
     }
 }

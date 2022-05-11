@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity( name = "healthinsurance")
 @Table( name = "health_insurance")
-public class HealthInsurance extends Institution {
+public class HealthInsurance extends Institution implements ReferenceObject {
 
     @OneToMany(mappedBy = "healthInsurance", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
@@ -19,6 +19,10 @@ public class HealthInsurance extends Institution {
 
     public HealthInsurance() {
 
+    }
+
+    public HealthInsurance(String name, String phone, String fax, String email, Address address) {
+        super(name, phone, fax, email, address);
     }
 
     public HealthInsurance(String name, String phone, String fax, String email, Address address, List<InstitutionRole> institutionRoles) {

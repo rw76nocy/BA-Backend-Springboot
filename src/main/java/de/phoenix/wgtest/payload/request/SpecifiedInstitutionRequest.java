@@ -1,8 +1,9 @@
 package de.phoenix.wgtest.payload.request;
 
 import de.phoenix.wgtest.model.management.Address;
+import de.phoenix.wgtest.model.management.ReferenceObject;
 
-public class SpecifiedInstitutionRequest {
+public class SpecifiedInstitutionRequest implements ReferenceObject {
 
     private String name;
     private Address address;

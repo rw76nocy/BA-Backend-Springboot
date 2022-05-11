@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "Institution")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Institution {
+public class Institution implements ReferenceObject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -45,13 +45,17 @@ public class Institution {
 
     }
 
-    public Institution(String name, String phone, String fax, String email, Address address,
-                       List<InstitutionRole> institutionRoles) {
+    public Institution(String name, String phone, String fax, String email, Address address) {
         this.name = name;
         this.phone = phone;
         this.fax = fax;
         this.email = email;
         this.address = address;
+    }
+
+    public Institution(String name, String phone, String fax, String email, Address address,
+                       List<InstitutionRole> institutionRoles) {
+        this(name, phone, fax, email, address);
         this.institutionRoles = institutionRoles;
     }
 

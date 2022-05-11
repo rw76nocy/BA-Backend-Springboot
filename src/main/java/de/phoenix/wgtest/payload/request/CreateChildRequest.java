@@ -254,27 +254,27 @@ public class CreateChildRequest {
         this.childdoctor = childdoctor;
     }
 
-    public DayCareRequest getDayCare() {
+    public DayCareRequest getDayCareRequest() {
         return dayCare;
     }
 
-    public void setDayCare(DayCareRequest dayCare) {
+    public void setDayCareRequest(DayCareRequest dayCare) {
         this.dayCare = dayCare;
     }
 
-    public HealthInsuranceRequest getHealthInsurance() {
+    public HealthInsuranceRequest getHealthInsuranceRequest() {
         return healthInsurance;
     }
 
-    public void setHealthInsurance(HealthInsuranceRequest healthInsurance) {
+    public void setHealthInsuranceRequest(HealthInsuranceRequest healthInsurance) {
         this.healthInsurance = healthInsurance;
     }
 
-    public FoodSupplierRequest getFoodSupplier() {
+    public FoodSupplierRequest getFoodSupplierRequest() {
         return foodSupplier;
     }
 
-    public void setFoodSupplier(FoodSupplierRequest foodSupplier) {
+    public void setFoodSupplierRequest(FoodSupplierRequest foodSupplier) {
         this.foodSupplier = foodSupplier;
     }
 

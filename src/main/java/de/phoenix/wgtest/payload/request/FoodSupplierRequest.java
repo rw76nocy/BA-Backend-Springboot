@@ -1,8 +1,10 @@
 package de.phoenix.wgtest.payload.request;
 
 import de.phoenix.wgtest.model.management.Address;
+import de.phoenix.wgtest.model.management.FoodSupplier;
+import de.phoenix.wgtest.model.management.ReferenceObject;
 
-public class FoodSupplierRequest extends SpecifiedInstitutionRequest {
+public class FoodSupplierRequest extends SpecifiedInstitutionRequest  implements ReferenceObject {
 
     private String cNumber;
     private String pin;
@@ -30,5 +32,9 @@ public class FoodSupplierRequest extends SpecifiedInstitutionRequest {
 
     public void setPin(String pin) {
         this.pin = pin;
+    }
+
+    public FoodSupplier getFoodSupplier() {
+        return new FoodSupplier(getName(), getPhone(), getFax(), getEmail(), getAddress());
     }
 }

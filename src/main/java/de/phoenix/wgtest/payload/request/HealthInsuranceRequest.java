@@ -1,8 +1,10 @@
 package de.phoenix.wgtest.payload.request;
 
 import de.phoenix.wgtest.model.management.Address;
+import de.phoenix.wgtest.model.management.HealthInsurance;
+import de.phoenix.wgtest.model.management.ReferenceObject;
 
-public class HealthInsuranceRequest extends SpecifiedInstitutionRequest {
+public class HealthInsuranceRequest extends SpecifiedInstitutionRequest  implements ReferenceObject {
 
     private String holder;
     private String cNumber;
@@ -30,5 +32,9 @@ public class HealthInsuranceRequest extends SpecifiedInstitutionRequest {
 
     public void setcNumber(String cNumber) {
         this.cNumber = cNumber;
+    }
+
+    public HealthInsurance getHealthInsurance() {
+        return new HealthInsurance(getName(), getPhone(), getFax(), getEmail(), getAddress());
     }
 }
