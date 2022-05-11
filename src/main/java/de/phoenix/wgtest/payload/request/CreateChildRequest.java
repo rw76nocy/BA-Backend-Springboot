@@ -254,7 +254,7 @@ public class CreateChildRequest {
         this.childdoctor = childdoctor;
     }
 
-    public DayCareRequest getDayCareRequest() {
+    /*public DayCareRequest getDayCareRequest() {
         return dayCare;
     }
 
@@ -276,7 +276,7 @@ public class CreateChildRequest {
 
     public void setFoodSupplierRequest(FoodSupplierRequest foodSupplier) {
         this.foodSupplier = foodSupplier;
-    }
+    }*/
 
     public Institution getDriver() {
         return driver;
@@ -316,5 +316,29 @@ public class CreateChildRequest {
 
     public void setPartners(List<SpecifiedPersonRequest> partners) {
         this.partners = partners;
+    }
+
+    public DayCareRequest getDayCare() {
+        return dayCare;
+    }
+
+    public void setDayCare(DayCareRequest dayCare) {
+        this.dayCare = dayCare;
+    }
+
+    public HealthInsuranceRequest getHealthInsurance() {
+        return healthInsurance;
+    }
+
+    public void setHealthInsurance(HealthInsuranceRequest healthInsurance) {
+        this.healthInsurance = healthInsurance;
+    }
+
+    public FoodSupplierRequest getFoodSupplier() {
+        return foodSupplier;
+    }
+
+    public void setFoodSupplier(FoodSupplierRequest foodSupplier) {
+        this.foodSupplier = foodSupplier;
     }
 }

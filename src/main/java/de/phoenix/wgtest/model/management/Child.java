@@ -68,15 +68,15 @@ public class Child {
     @JoinColumn(name = "insured_id", nullable = true)
     private Insured insured;
 
-    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @Fetch(value = FetchMode.SUBSELECT)
     private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @Fetch(value = FetchMode.SUBSELECT)
     private List<PersonRole> personRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @Fetch(value = FetchMode.SUBSELECT)
     private List<InstitutionRole> institutionRoles = new ArrayList<>();
 

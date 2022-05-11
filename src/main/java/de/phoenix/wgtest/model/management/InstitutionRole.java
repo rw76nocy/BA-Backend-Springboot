@@ -2,6 +2,7 @@ package de.phoenix.wgtest.model.management;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.phoenix.wgtest.model.embeddable.InstitutionRolePK;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ public class InstitutionRole {
 
     @EmbeddedId
     @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     InstitutionRolePK id = new InstitutionRolePK();
 
     @ManyToOne

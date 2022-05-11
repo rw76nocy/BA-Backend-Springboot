@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
@@ -84,6 +85,7 @@ public class ChildrenService {
 
         child.setPersonRoles(getPersonRoles(child, request));
         child.setInstitutionRoles(getInstitutionRoles(child, request));
+
         childRepository.save(child);
         return child;
     }
@@ -120,9 +122,9 @@ public class ChildrenService {
 
     private ReferenceObjectMap getInstitutionReferenceObject(CreateChildRequest request) {
         ReferenceObjectMap map = new ReferenceObjectMap();
-        map.putIfNamePresent(request.getDayCareRequest(), new RoleObject(ERole.DAYCARE));
-        map.putIfNamePresent(request.getHealthInsuranceRequest(), new RoleObject(ERole.HEALTHINSURANCE));
-        map.putIfNamePresent(request.getFoodSupplierRequest(), new RoleObject(ERole.FOODSUPPLIER));
+        map.putIfNamePresent(request.getDayCare(), new RoleObject(ERole.DAYCARE));
+        map.putIfNamePresent(request.getHealthInsurance(), new RoleObject(ERole.HEALTHINSURANCE));
+        map.putIfNamePresent(request.getFoodSupplier(), new RoleObject(ERole.FOODSUPPLIER));
         map.putIfNamePresent(request.getDriver(), new RoleObject(ERole.DRIVER));
         return map;
     }
@@ -250,7 +252,7 @@ public class ChildrenService {
         return asd;
     }
 
-    private Institution createOrLoadInstitution(SpecifiedInstitutionRequest sir) {
+    private Institution createOrLoadInstitution(ReferenceObject sir) {
         Institution i = null;
 
         if (sir instanceof DayCareRequest) {
@@ -275,14 +277,41 @@ public class ChildrenService {
             i.setName(sir.getName());
         }
 
-        Address address = getAddressOrNull(sir.getAddress());
-        if (address != null) {
-            i.setAddress(address);
+        if (sir instanceof DayCareRequest) {
+            DayCareRequest request = (DayCareRequest) sir;
+            Address address = getAddressOrNull(request.getDayCare().getAddress());
+            if (address != null) {
+                i.setAddress(address);
+            }
+
+            i.setPhone(request.getDayCare().getPhone());
+            i.setFax(request.getDayCare().getFax());
+            i.setEmail(request.getDayCare().getEmail());
         }
 
-        i.setPhone(sir.getPhone());
-        i.setFax(sir.getFax());
-        i.setEmail(sir.getEmail());
+        if (sir instanceof HealthInsuranceRequest) {
+            HealthInsuranceRequest request = (HealthInsuranceRequest) sir;
+            Address address = getAddressOrNull(request.getAddress());
+            if (address != null) {
+                i.setAddress(address);
+            }
+
+            i.setPhone(request.getPhone());
+            i.setFax(request.getFax());
+            i.setEmail(request.getEmail());
+        }
+
+        if (sir instanceof FoodSupplierRequest) {
+            FoodSupplierRequest request = (FoodSupplierRequest) sir;
+            Address address = getAddressOrNull(request.getAddress());
+            if (address != null) {
+                i.setAddress(address);
+            }
+
+            i.setPhone(request.getPhone());
+            i.setFax(request.getFax());
+            i.setEmail(request.getEmail());
+        }
 
         if (sir instanceof DayCareRequest) {
             dayCareRepository.save((DayCare) i);
