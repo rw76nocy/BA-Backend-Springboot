@@ -9,6 +9,8 @@ import java.util.List;
 
 public class CreateChildRequest {
 
+    private Long id;
+
     private LivingGroup livingGroup;
 
     @NotBlank
@@ -75,13 +77,14 @@ public class CreateChildRequest {
     public CreateChildRequest() {
     }
 
-    public CreateChildRequest(LivingGroup livingGroup, String gender, String firstName, String lastName,
+    public CreateChildRequest(Long id, LivingGroup livingGroup, String gender, String firstName, String lastName,
                               Date birthday, Date entranceDate, Date releaseDate, String reason, String care,
                               String visit, String diseases, String superVisor1, String superVisor2, Person guardian,
                               Asd asd, Person mother, Person father, Person childdoctor, DayCareRequest dayCare,
                               HealthInsuranceRequest healthInsurance, FoodSupplierRequest foodSupplier, Institution driver,
                               List<SpecifiedPersonRequest> referencePersons, List<SpecifiedPersonRequest> doctors,
                               List<SpecifiedPersonRequest> therapists, List<SpecifiedPersonRequest> partners) {
+        this.id = id;
         this.livingGroup = livingGroup;
         this.gender = gender;
         this.firstName = firstName;
@@ -108,6 +111,14 @@ public class CreateChildRequest {
         this.doctors = doctors;
         this.therapists = therapists;
         this.partners = partners;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LivingGroup getLivingGroup() {
@@ -253,30 +264,6 @@ public class CreateChildRequest {
     public void setChilddoctor(Person childdoctor) {
         this.childdoctor = childdoctor;
     }
-
-    /*public DayCareRequest getDayCareRequest() {
-        return dayCare;
-    }
-
-    public void setDayCareRequest(DayCareRequest dayCare) {
-        this.dayCare = dayCare;
-    }
-
-    public HealthInsuranceRequest getHealthInsuranceRequest() {
-        return healthInsurance;
-    }
-
-    public void setHealthInsuranceRequest(HealthInsuranceRequest healthInsurance) {
-        this.healthInsurance = healthInsurance;
-    }
-
-    public FoodSupplierRequest getFoodSupplierRequest() {
-        return foodSupplier;
-    }
-
-    public void setFoodSupplierRequest(FoodSupplierRequest foodSupplier) {
-        this.foodSupplier = foodSupplier;
-    }*/
 
     public Institution getDriver() {
         return driver;

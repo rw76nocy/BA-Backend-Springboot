@@ -38,6 +38,20 @@ public class FileController {
         }
     }
 
+    @PostMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<MessageResponse> updateFile(@RequestParam("file") MultipartFile file, @RequestParam("child_id") Long childId) {
+        String message = "";
+        try {
+            storageService.update(file, childId);
+            message = "Update the file sucessfully: " + file.getOriginalFilename();
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse(message));
+        } catch (Exception e) {
+            message = "Could not update the file: " + file.getOriginalFilename() + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageResponse(message));
+        }
+    }
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<FileResponse>> getListFiles() {

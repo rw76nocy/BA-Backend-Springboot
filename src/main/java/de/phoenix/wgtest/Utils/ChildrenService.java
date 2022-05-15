@@ -2,9 +2,12 @@ package de.phoenix.wgtest.Utils;
 
 import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.payload.request.*;
+import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
+import de.phoenix.wgtest.services.FileStorageService;
 import one.util.streamex.EntryStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,6 +67,9 @@ public class ChildrenService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    FileStorageService fileStorageService;
+
     public List<Child> getChildrenByLivingGroup(String livingGroup) {
         List<Child> all = new ArrayList<>();
         Optional<LivingGroup> optLg = livingGroupRepository.findByName(livingGroup);
@@ -88,6 +94,61 @@ public class ChildrenService {
 
         childRepository.save(child);
         return child;
+    }
+
+    @Transactional
+    public Child updateChild(CreateChildRequest request) {
+        Optional<Child> opt = childRepository.findById(request.getId());
+        if (opt.isEmpty()) {
+            return null;
+        }
+        Child child = opt.get();
+
+        child.setGender(EGender.findByName(request.getGender()));
+        child.setFirstName(request.getFirstName());
+        child.setLastName(request.getLastName());
+        child.setBirthday(request.getBirthday());
+        child.setEntranceDate(request.getEntranceDate());
+        child.setReleaseDate(request.getReleaseDate());
+        child.setReason(request.getReason());
+        child.setCare(request.getCare());
+        child.setVisit(request.getVisit());
+        child.setDiseases(request.getDiseases());
+        child.setLivingGroup(request.getLivingGroup());
+
+        childRepository.save(child);
+
+        List<PersonRole> oldPRoles = personRoleRepository.findAllByChild(child);
+        List<InstitutionRole> oldIRoles = institutionRoleRepository.findAllByChild(child);
+
+        List<PersonRole> pRoles = getPersonRoles(child, request);
+        List<InstitutionRole> iRoles = getInstitutionRoles(child, request);
+
+        child.setPersonRoles(pRoles);
+        child.setInstitutionRoles(iRoles);
+
+        childRepository.save(child);
+
+        removeOldPersonEntries(oldPRoles, pRoles);
+        removeOldInstitutionEntries(oldIRoles, iRoles);
+
+        return child;
+    }
+
+    @Transactional
+    public ResponseEntity<?> deleteChild(Long id) {
+        if (childRepository.findById(id).isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Ein Kind mit dieser ID existiert nicht!"));
+        }
+
+        fileStorageService.deleteFile(id);
+        personRoleRepository.deleteByChildId(id);
+        institutionRoleRepository.deleteByChildId(id);
+        childRepository.deleteById(id);
+
+        return ResponseEntity.ok(new MessageResponse("Kind erfolgreich gelöscht!"));
     }
 
     private List<PersonRole> getPersonRoles(Child child, CreateChildRequest request) {
@@ -179,15 +240,13 @@ public class ChildrenService {
     private PersonRole persistPersonRole(Child child, Person person, ERole eRole, String specification) {
         Role role = createOrLoadRoleByTypeAndSpecification(eRole, specification);
         PersonRole pRole = new PersonRole(child, person, role);
-        personRoleRepository.save(pRole);
-        return pRole;
+        return createOrLoadPersonRole(pRole);
     }
 
     private InstitutionRole persistInstitutionRole(Child child, Institution institution, ERole eRole, String specification) {
         Role role = createOrLoadRoleByTypeAndSpecification(eRole, specification);
         InstitutionRole iRole = new InstitutionRole(child, institution, role);
-        institutionRoleRepository.save(iRole);
-        return iRole;
+        return createOrLoadInstitutionRole(iRole);
     }
 
     private Role createOrLoadRoleByTypeAndSpecification(ERole eRole, String specification) {
@@ -198,6 +257,24 @@ public class ChildrenService {
         Role role = new Role(eRole, specification);
         roleRepository.save(role);
         return role;
+    }
+
+    private PersonRole createOrLoadPersonRole(PersonRole pRole) {
+        Optional<PersonRole> opt = personRoleRepository.findByChildAndPersonAndRole(pRole.getChild(), pRole.getPerson(), pRole.getRole());
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+        personRoleRepository.save(pRole);
+        return pRole;
+    }
+
+    private InstitutionRole createOrLoadInstitutionRole(InstitutionRole iRole) {
+        Optional<InstitutionRole> opt = institutionRoleRepository.findByChildAndInstitutionAndRole(iRole.getChild(), iRole.getInstitution(), iRole.getRole());
+        if (opt.isPresent()) {
+            return opt.get();
+        }
+        institutionRoleRepository.save(iRole);
+        return iRole;
     }
 
     private Person createOrLoadPerson(Person p) {
@@ -406,5 +483,19 @@ public class ChildrenService {
             return address;
         }
         return null;
+    }
+
+    private void removeOldPersonEntries(List<PersonRole> oldRoles, List<PersonRole> newRoles) {
+        oldRoles.removeIf(newRoles::contains);
+        for (PersonRole pRole : oldRoles) {
+            personRoleRepository.deleteByPersonRole(pRole.getChild().getId(), pRole.getPerson().getId(), pRole.getRole().getId());
+        }
+    }
+
+    private void removeOldInstitutionEntries(List<InstitutionRole> oldRoles, List<InstitutionRole> newRoles) {
+        oldRoles.removeIf(newRoles::contains);
+        for (InstitutionRole iRole : oldRoles) {
+            institutionRoleRepository.deleteByInstitutionRole(iRole.getChild().getId(), iRole.getInstitution().getId(), iRole.getRole().getId());
+        }
     }
 }

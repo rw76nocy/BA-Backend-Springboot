@@ -16,7 +16,7 @@ public class ReferenceObjectMap extends HashMap<ReferenceObject, RoleObject> {
     }
 
     public void putIfNamePresent(ReferenceObject ref, RoleObject roleObject) {
-        if (Objects.nonNull(ref.getName())) {
+        if (Objects.nonNull(ref.getName()) && !ref.getName().equals("")) {
             put(ref, roleObject);
         }
     }
