@@ -1,7 +1,9 @@
-package de.phoenix.wgtest.Utils;
+package de.phoenix.wgtest.services;
 
+import de.phoenix.wgtest.Utils.ReferenceObjectMap;
 import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.payload.request.*;
+import de.phoenix.wgtest.payload.response.ChildResponse;
 import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
 import de.phoenix.wgtest.services.FileStorageService;
@@ -71,16 +73,15 @@ public class ChildrenService {
     FileStorageService fileStorageService;
 
     public List<Child> getChildrenByLivingGroup(String livingGroup) {
-        List<Child> all = new ArrayList<>();
-        Optional<LivingGroup> optLg = livingGroupRepository.findByName(livingGroup);
-        if (optLg.isPresent()) {
-            all = childRepository.findByLivingGroup(optLg.get());
+        LivingGroup lg = livingGroupRepository.findByName(livingGroup).orElse(null);
+        if (lg == null) {
+            return new ArrayList<>();
         }
-        return all;
+        return childRepository.findByLivingGroup(lg);
     }
 
     @Transactional
-    public Child insertChild(CreateChildRequest request) {
+    public ResponseEntity<?> insertChild(CreateChildRequest request) {
         Child child = new Child(
                 EGender.findByName(request.getGender()), request.getFirstName(), request.getLastName(),
                 request.getBirthday(), request.getEntranceDate(), request.getReleaseDate(),
@@ -93,16 +94,17 @@ public class ChildrenService {
         child.setInstitutionRoles(getInstitutionRoles(child, request));
 
         childRepository.save(child);
-        return child;
+        return ResponseEntity.ok(new ChildResponse("Kind erfolgreich angelegt!", child.getId()));
     }
 
     @Transactional
-    public Child updateChild(CreateChildRequest request) {
-        Optional<Child> opt = childRepository.findById(request.getId());
-        if (opt.isEmpty()) {
-            return null;
+    public ResponseEntity<?> updateChild(CreateChildRequest request) {
+        Child child = childRepository.findById(request.getId()).orElse(null);
+        if (child == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Ein Kind mit dieser ID existiert nicht!"));
         }
-        Child child = opt.get();
 
         child.setGender(EGender.findByName(request.getGender()));
         child.setFirstName(request.getFirstName());
@@ -132,7 +134,7 @@ public class ChildrenService {
         removeOldPersonEntries(oldPRoles, pRoles);
         removeOldInstitutionEntries(oldIRoles, iRoles);
 
-        return child;
+        return ResponseEntity.ok(new ChildResponse("Kind erfolgreich geändert!", child.getId()));
     }
 
     @Transactional
@@ -468,7 +470,6 @@ public class ChildrenService {
         return supply;
     }
 
-    //TODO: Übergangslösung, wenn Adressen-Instanz nicht gültig, dann Adresse nicht speichern
     private Address getAddressOrNull(Address address) {
         if (address == null) {
             return null;
