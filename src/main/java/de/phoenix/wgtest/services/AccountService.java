@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -28,11 +27,11 @@ public class AccountService {
         return StreamEx.of(userRepository.findAll()).filter(u -> !u.getUsername().equals("admin")).toList();
     }
 
-    public User getUserAccountById(@PathVariable Long id) {
+    public User getUserAccountById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<User> getUserAccountByLivingGroup(@PathVariable String livingGroup) {
+    public List<User> getUserAccountByLivingGroup(String livingGroup) {
         UserRole role = createOrLoadUserRole(EUserRole.ROLE_USER);
         return StreamEx.of(userRepository.findAll())
                 .filter(u -> u.getRoles().contains(role))
@@ -41,7 +40,7 @@ public class AccountService {
     }
 
     @Transactional
-    public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAccount(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             return ResponseEntity

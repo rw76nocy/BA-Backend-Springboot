@@ -75,7 +75,7 @@ public class ChildrenService {
     public List<Child> getChildrenByLivingGroup(String livingGroup) {
         LivingGroup lg = livingGroupRepository.findByName(livingGroup).orElse(null);
         if (lg == null) {
-            return new ArrayList<>();
+            return List.of();
         }
         return childRepository.findByLivingGroup(lg);
     }
