@@ -211,7 +211,7 @@ public class ChildrenService {
         }
         if (obj instanceof DayCareRequest) {
             DayCareRequest request = (DayCareRequest) obj;
-            DayCare d = (DayCare) createOrLoadInstitution(request);
+            DayCare d = createOrLoadDayCare(request);
             Teach t = createOrLoadTeach(d, request.getGroup(), request.getTeacher());
             if (t != null) {
                 child.setTeach(t);
@@ -220,7 +220,7 @@ public class ChildrenService {
         }
         if (obj instanceof HealthInsuranceRequest) {
             HealthInsuranceRequest request = (HealthInsuranceRequest) obj;
-            HealthInsurance h = (HealthInsurance) createOrLoadInstitution(request);
+            HealthInsurance h = createOrLoadHealthInsurance(request);
             Insured i = createOrLoadInsured(h, request.getcNumber(), request.getHolder());
             if (i != null) {
                 child.setInsured(i);
@@ -229,7 +229,7 @@ public class ChildrenService {
         }
         if (obj instanceof FoodSupplierRequest) {
             FoodSupplierRequest request = (FoodSupplierRequest) obj;
-            FoodSupplier f = (FoodSupplier) createOrLoadInstitution(request);
+            FoodSupplier f = createOrLoadFoodSupplier(request);
             Supply s = createOrLoadSupply(f, request.getcNumber(), request.getPin());
             if (s != null) {
                 child.setSupply(s);
@@ -331,82 +331,6 @@ public class ChildrenService {
         return asd;
     }
 
-    private Institution createOrLoadInstitution(ReferenceObject sir) {
-        Institution i = null;
-
-        if (sir instanceof DayCareRequest) {
-            Optional<DayCare> optDayCare = dayCareRepository.findByName(sir.getName());
-            if (optDayCare.isPresent()) {
-                i = optDayCare.get();
-            }
-        } else if (sir instanceof HealthInsuranceRequest) {
-            Optional<HealthInsurance> optHealthInsurance = healthInsuranceRepository.findByName(sir.getName());
-            if (optHealthInsurance.isPresent()) {
-                i = optHealthInsurance.get();
-            }
-        } else if (sir instanceof FoodSupplierRequest) {
-            Optional<FoodSupplier> optFoodSupplier = foodSupplierRepository.findByName(sir.getName());
-            if (optFoodSupplier.isPresent()) {
-                i = optFoodSupplier.get();
-            }
-        }
-
-        if (i == null) {
-            i = new Institution();
-            i.setName(sir.getName());
-        }
-
-        if (sir instanceof DayCareRequest) {
-            DayCareRequest request = (DayCareRequest) sir;
-            Address address = getAddressOrNull(request.getDayCare().getAddress());
-            if (address != null) {
-                i.setAddress(address);
-            }
-
-            i.setPhone(request.getDayCare().getPhone());
-            i.setFax(request.getDayCare().getFax());
-            i.setEmail(request.getDayCare().getEmail());
-        }
-
-        if (sir instanceof HealthInsuranceRequest) {
-            HealthInsuranceRequest request = (HealthInsuranceRequest) sir;
-            Address address = getAddressOrNull(request.getAddress());
-            if (address != null) {
-                i.setAddress(address);
-            }
-
-            i.setPhone(request.getPhone());
-            i.setFax(request.getFax());
-            i.setEmail(request.getEmail());
-        }
-
-        if (sir instanceof FoodSupplierRequest) {
-            FoodSupplierRequest request = (FoodSupplierRequest) sir;
-            Address address = getAddressOrNull(request.getAddress());
-            if (address != null) {
-                i.setAddress(address);
-            }
-
-            i.setPhone(request.getPhone());
-            i.setFax(request.getFax());
-            i.setEmail(request.getEmail());
-        }
-
-        if (sir instanceof DayCareRequest) {
-            dayCareRepository.save((DayCare) i);
-        }
-
-        if (sir instanceof HealthInsuranceRequest) {
-            healthInsuranceRepository.save((HealthInsurance) i);
-        }
-
-        if (sir instanceof FoodSupplierRequest) {
-            foodSupplierRepository.save((FoodSupplier) i);
-        }
-
-        return i;
-    }
-
     private Institution createOrLoadInstitution(Institution institution) {
         Institution i;
 
@@ -429,6 +353,69 @@ public class ChildrenService {
 
         institutionRepository.save(i);
         return i;
+    }
+
+    private DayCare createOrLoadDayCare(DayCareRequest request) {
+        DayCare dc = dayCareRepository.findByName(request.getName()).orElse(null);
+
+        if (dc == null) {
+            dc = new DayCare();
+            dc.setName(request.getName());
+        }
+
+        Address address = getAddressOrNull(request.getDayCare().getAddress());
+        if (address != null) {
+            dc.setAddress(address);
+        }
+
+        dc.setPhone(request.getDayCare().getPhone());
+        dc.setFax(request.getDayCare().getFax());
+        dc.setEmail(request.getDayCare().getEmail());
+
+        dayCareRepository.save(dc);
+        return dc;
+    }
+
+    private HealthInsurance createOrLoadHealthInsurance(HealthInsuranceRequest request) {
+        HealthInsurance hi = healthInsuranceRepository.findByName(request.getName()).orElse(null);
+
+        if (hi == null) {
+            hi = new HealthInsurance();
+            hi.setName(request.getName());
+        }
+
+        Address address = getAddressOrNull(request.getHealthInsurance().getAddress());
+        if (address != null) {
+            hi.setAddress(address);
+        }
+
+        hi.setPhone(request.getHealthInsurance().getPhone());
+        hi.setFax(request.getHealthInsurance().getFax());
+        hi.setEmail(request.getHealthInsurance().getEmail());
+
+        healthInsuranceRepository.save(hi);
+        return hi;
+    }
+
+    private FoodSupplier createOrLoadFoodSupplier(FoodSupplierRequest request) {
+        FoodSupplier fs = foodSupplierRepository.findByName(request.getName()).orElse(null);
+
+        if (fs == null) {
+            fs = new FoodSupplier();
+            fs.setName(request.getName());
+        }
+
+        Address address = getAddressOrNull(request.getFoodSupplier().getAddress());
+        if (address != null) {
+            fs.setAddress(address);
+        }
+
+        fs.setPhone(request.getFoodSupplier().getPhone());
+        fs.setFax(request.getFoodSupplier().getFax());
+        fs.setEmail(request.getFoodSupplier().getEmail());
+
+        foodSupplierRepository.save(fs);
+        return fs;
     }
 
     private Teach createOrLoadTeach(DayCare dayCare, String group, String teacher) {
