@@ -1,14 +1,10 @@
 package de.phoenix.wgtest.services;
 
-import de.phoenix.wgtest.model.management.Address;
-import de.phoenix.wgtest.model.management.LivingGroup;
-import de.phoenix.wgtest.model.management.Person;
+import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.model.security.EUserRole;
 import de.phoenix.wgtest.model.security.UserRole;
 import de.phoenix.wgtest.payload.response.MessageResponse;
-import de.phoenix.wgtest.repository.management.AddressRepository;
-import de.phoenix.wgtest.repository.management.LivingGroupRepository;
-import de.phoenix.wgtest.repository.management.PersonRepository;
+import de.phoenix.wgtest.repository.management.*;
 import de.phoenix.wgtest.repository.security.UserRoleRepository;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +29,12 @@ public class EmployeeService {
 
     @Autowired
     LivingGroupRepository livingGroupRepository;
+
+    @Autowired
+    AppointmentRepository appointmentRepository;
+
+    @Autowired
+    AppointmentPersonParticipantRepository appointmentPersonParticipantRepository;
 
     public List<Person> getAllEmployees() {
         return StreamEx.of(personRepository.findAll()).filter(p -> p.getLivingGroup() != null).toList();
@@ -143,6 +145,8 @@ public class EmployeeService {
         }
 
         personRepository.deleteById(id);
+        removeEmployeeFromAppointments(id);
+        appointmentPersonParticipantRepository.deleteByPersonId(id);
         return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich gelöscht!"));
     }
 
@@ -164,5 +168,16 @@ public class EmployeeService {
 
     private Predicate<Person> hasNotUser() {
         return p-> p.getUser() == null;
+    }
+
+    private void removeEmployeeFromAppointments(Long personId) {
+        Person person = personRepository.getById(personId);
+        List<AppointmentPersonParticipant> all = appointmentPersonParticipantRepository.findAllByPerson(person);
+        for (AppointmentPersonParticipant app : all) {
+            //TODO Wenn Mitarbeiter der einzige ist, dann auch Termin löschen, hier definitiv nochmal gucken!!!!!
+            Appointment a = app.getAppointment();
+            a.removePersonParticipant(app);
+            appointmentRepository.save(a);
+        }
     }
 }

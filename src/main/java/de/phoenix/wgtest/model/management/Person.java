@@ -47,9 +47,8 @@ public class Person implements ReferenceObject {
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
-    private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
+    private List<AppointmentPersonParticipant> appointmentPersonParticipants = new ArrayList<>();
 
-    //Hier auch besser FetchType.Lazy!!! Aber erstmal testen dann!!!
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
@@ -73,12 +72,12 @@ public class Person implements ReferenceObject {
     }
 
     public Person(String gender, String name, String phone, String fax, String email, Date birthday, Address address,
-                  LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants,
+                  LivingGroup livingGroup, List<AppointmentPersonParticipant> appointmentPersonParticipants,
                   User user) {
         this(name, phone, fax, email, birthday, address);
         this.gender = gender;
         this.livingGroup = livingGroup;
-        this.appointmentParticipants = appointmentParticipants;
+        this.appointmentPersonParticipants = appointmentPersonParticipants;
         this.user = user;
     }
 
@@ -154,12 +153,12 @@ public class Person implements ReferenceObject {
         this.livingGroup = livingGroup;
     }
 
-    public List<AppointmentParticipants> getAppointmentParticipants() {
-        return appointmentParticipants;
+    public List<AppointmentPersonParticipant> getAppointmentPersonParticipants() {
+        return appointmentPersonParticipants;
     }
 
-    public void setAppointmentParticipants(List<AppointmentParticipants> appointmentParticipants) {
-        this.appointmentParticipants = appointmentParticipants;
+    public void setAppointmentPersonParticipants(List<AppointmentPersonParticipant> appointmentPersonParticipants) {
+        this.appointmentPersonParticipants = appointmentPersonParticipants;
     }
 
     public List<PersonRole> getPersonRoles() {
@@ -176,5 +175,9 @@ public class Person implements ReferenceObject {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void removePersonParticipant(AppointmentPersonParticipant app) {
+        appointmentPersonParticipants.remove(app);
     }
 }

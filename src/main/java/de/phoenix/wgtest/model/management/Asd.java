@@ -16,9 +16,9 @@ public class Asd extends Person implements ReferenceObject {
     }
 
     public Asd(String gender, String name, String phone, String fax, String email, Date birthday, Address address,
-               LivingGroup livingGroup, List<AppointmentParticipants> appointmentParticipants, User user,
+               LivingGroup livingGroup, List<AppointmentPersonParticipant> appointmentPersonParticipants, User user,
                String youthoffice) {
-        super(gender, name, phone, fax, email, birthday, address, livingGroup, appointmentParticipants, user);
+        super(gender, name, phone, fax, email, birthday, address, livingGroup, appointmentPersonParticipants, user);
         this.youthoffice = youthoffice;
     }
 

@@ -1,5 +1,6 @@
 package de.phoenix.wgtest.model.management;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
@@ -24,6 +25,10 @@ public class Child {
     @NotBlank
     @Size( max = 100)
     private String lastName;
+
+    @NotBlank
+    @Size( max = 200)
+    private String fullName;
 
     @Temporal(TemporalType.DATE)
     private Date birthday;
@@ -65,9 +70,10 @@ public class Child {
     @JoinColumn(name = "insured_id", nullable = true)
     private Insured insured;
 
-    @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @OneToMany(mappedBy = "child", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<AppointmentParticipants> appointmentParticipants = new ArrayList<>();
+    @JsonIgnore
+    private List<AppointmentChildParticipant> appointmentChildParticipants = new ArrayList<>();
 
     @OneToMany(mappedBy = "child", fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @Fetch(value = FetchMode.SUBSELECT)
@@ -81,11 +87,12 @@ public class Child {
 
     }
 
-    public Child(EGender gender, String firstName, String lastName, Date birthday, Date entranceDate,
+    public Child(EGender gender, String firstName, String lastName, String fullName, Date birthday, Date entranceDate,
                  Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup) {
         this.gender = gender;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.fullName = fullName;
         this.birthday = birthday;
         this.entranceDate = entranceDate;
         this.releaseDate = releaseDate;
@@ -96,17 +103,17 @@ public class Child {
         this.livingGroup = livingGroup;
     }
 
-    public Child(EGender gender,  String firstName, String lastName, Date birthday, Date entranceDate,
+    public Child(EGender gender,  String firstName, String lastName, String fullName, Date birthday, Date entranceDate,
                  Date releaseDate, String reason, String care, String visit, String diseases, LivingGroup livingGroup,
                  List<Record> records, Teach teach, Supply supply, Insured insured,
-                 List<AppointmentParticipants> appointmentParticipants, List<PersonRole> personRoles,
+                 List<AppointmentChildParticipant> appointmentChildParticipants, List<PersonRole> personRoles,
                  List<InstitutionRole> institutionRoles) {
-        this(gender, firstName, lastName, birthday, entranceDate, releaseDate, reason, care, visit, diseases, livingGroup);
+        this(gender, firstName, lastName, fullName, birthday, entranceDate, releaseDate, reason, care, visit, diseases, livingGroup);
         this.records = records;
         this.teach = teach;
         this.supply = supply;
         this.insured = insured;
-        this.appointmentParticipants = appointmentParticipants;
+        this.appointmentChildParticipants = appointmentChildParticipants;
         this.personRoles = personRoles;
         this.institutionRoles = institutionRoles;
     }
@@ -141,6 +148,14 @@ public class Child {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Date getBirthday() {
@@ -239,12 +254,12 @@ public class Child {
         this.insured = insured;
     }
 
-    public List<AppointmentParticipants> getAppointmentParticipants() {
-        return appointmentParticipants;
+    public List<AppointmentChildParticipant> getAppointmentChildParticipants() {
+        return appointmentChildParticipants;
     }
 
-    public void setAppointmentParticipants(List<AppointmentParticipants> appointmentParticipants) {
-        this.appointmentParticipants = appointmentParticipants;
+    public void setAppointmentChildParticipants(List<AppointmentChildParticipant> appointmentChildParticipants) {
+        this.appointmentChildParticipants = appointmentChildParticipants;
     }
 
     public List<PersonRole> getPersonRoles() {

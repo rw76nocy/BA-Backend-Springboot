@@ -8,6 +8,7 @@ import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
 import de.phoenix.wgtest.services.FileStorageService;
 import one.util.streamex.EntryStream;
+import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -72,6 +73,15 @@ public class ChildrenService {
     @Autowired
     FileStorageService fileStorageService;
 
+    @Autowired
+    AppointmentRepository appointmentRepository;
+
+    @Autowired
+    AppointmentChildParticipantRepository appointmentChildParticipantRepository;
+
+    @Autowired
+    AppointmentPersonParticipantRepository appointmentPersonParticipantRepository;
+
     public List<Child> getChildrenByLivingGroup(String livingGroup) {
         LivingGroup lg = livingGroupRepository.findByName(livingGroup).orElse(null);
         if (lg == null) {
@@ -82,9 +92,10 @@ public class ChildrenService {
 
     @Transactional
     public ResponseEntity<?> insertChild(CreateChildRequest request) {
+        String fullName = request.getFirstName() + " " + request.getLastName();
         Child child = new Child(
                 EGender.findByName(request.getGender()), request.getFirstName(), request.getLastName(),
-                request.getBirthday(), request.getEntranceDate(), request.getReleaseDate(),
+                fullName, request.getBirthday(), request.getEntranceDate(), request.getReleaseDate(),
                 request.getReason(), request.getCare(), request.getVisit(), request.getDiseases(),
                 request.getLivingGroup()
         );
@@ -109,6 +120,7 @@ public class ChildrenService {
         child.setGender(EGender.findByName(request.getGender()));
         child.setFirstName(request.getFirstName());
         child.setLastName(request.getLastName());
+        child.setFullName(request.getFirstName() + " " + request.getLastName());
         child.setBirthday(request.getBirthday());
         child.setEntranceDate(request.getEntranceDate());
         child.setReleaseDate(request.getReleaseDate());
@@ -148,6 +160,7 @@ public class ChildrenService {
         fileStorageService.deleteFile(id);
         personRoleRepository.deleteByChildId(id);
         institutionRoleRepository.deleteByChildId(id);
+        removeChildFromAppointments(id);
         childRepository.deleteById(id);
 
         return ResponseEntity.ok(new MessageResponse("Kind erfolgreich gelöscht!"));
@@ -484,6 +497,26 @@ public class ChildrenService {
         oldRoles.removeIf(newRoles::contains);
         for (InstitutionRole iRole : oldRoles) {
             institutionRoleRepository.deleteByInstitutionRole(iRole.getChild().getId(), iRole.getInstitution().getId(), iRole.getRole().getId());
+        }
+    }
+
+    private void removeChildFromAppointments(Long childId) {
+        Child child = childRepository.getById(childId);
+        List<AppointmentChildParticipant> all = appointmentChildParticipantRepository.findAllByChild(child);
+        for (AppointmentChildParticipant acp : all) {
+            Appointment a = acp.getAppointment();
+            appointmentChildParticipantRepository.deleteByAppointmentChildParticipant(acp.getChild().getId(), acp.getAppointment().getId());
+            a.removeChildParticipant(acp);
+            if (a.getAppointmentChildParticipants().isEmpty()) {
+                for (AppointmentPersonParticipant app : a.getAppointmentPersonParticipants()) {
+                    app.getPerson().removePersonParticipant(app);
+                    appointmentPersonParticipantRepository.deleteByAppointmentPersonParticipant(app.getPerson().getId(), app.getAppointment().getId());
+                }
+                a.setAppointmentPersonParticipants(new ArrayList<>());
+                appointmentRepository.deleteById(a.getId());
+            } else {
+                appointmentRepository.save(a);
+            }
         }
     }
 }

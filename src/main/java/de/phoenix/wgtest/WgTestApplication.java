@@ -82,6 +82,9 @@ public class WgTestApplication implements CommandLineRunner {
 	@Autowired
 	PersonRoleRepository personRoleRepository;
 
+	@Autowired
+	AppointmentTypeRepository appointmentTypeRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(WgTestApplication.class, args);
 	}
@@ -120,6 +123,26 @@ public class WgTestApplication implements CommandLineRunner {
 			LivingGroup lg = new LivingGroup();
 			lg.setName("Phoenix");
 			livingGroupRepository.save(lg);
+			//default appointment type
+			AppointmentType at = appointmentTypeRepository.findById(1L).orElse(null);
+			if (at == null) {
+				at = new AppointmentType();
+				at.setName("Sonstiges");
+				at.setColor("#09afff");
+				at.setLivingGroup(lg);
+				appointmentTypeRepository.save(at);
+				lg.setDefaultType(at);
+				List<AppointmentType> list = new ArrayList<>();
+				list.add(at);
+				lg.setAppointmentTypes(list);
+				livingGroupRepository.save(lg);
+			} else {
+				lg.setDefaultType(at);
+				List<AppointmentType> list = new ArrayList<>();
+				list.add(at);
+				lg.setAppointmentTypes(list);
+				livingGroupRepository.save(lg);
+			}
 		}
 
 		//test address

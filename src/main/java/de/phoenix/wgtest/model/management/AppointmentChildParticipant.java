@@ -1,14 +1,19 @@
 package de.phoenix.wgtest.model.management;
 
-import de.phoenix.wgtest.model.embeddable.AppointmentParticipantsPK;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.phoenix.wgtest.model.embeddable.AppointmentChildParticipantPK;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
 @Entity
-public class AppointmentParticipants {
+@Table( name = "appointment_child_participant")
+public class AppointmentChildParticipant {
 
     @EmbeddedId
-    AppointmentParticipantsPK id = new AppointmentParticipantsPK();
+    @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    AppointmentChildParticipantPK id = new AppointmentChildParticipantPK();
 
     @ManyToOne
     @MapsId("childId")
@@ -16,30 +21,25 @@ public class AppointmentParticipants {
     Child child;
 
     @ManyToOne
-    @MapsId("personId")
-    @JoinColumn(name = "person_id")
-    Person person;
-
-    @ManyToOne
     @MapsId("appointmentId")
     @JoinColumn(name = "appointment_id")
+    @JsonIgnore
     Appointment appointment;
 
-    public AppointmentParticipants() {
+    public AppointmentChildParticipant() {
 
     }
 
-    public AppointmentParticipants(Child child, Person person, Appointment appointment) {
+    public AppointmentChildParticipant(Child child, Appointment appointment) {
         this.child = child;
-        this.person = person;
         this.appointment = appointment;
     }
 
-    public AppointmentParticipantsPK getId() {
+    public AppointmentChildParticipantPK getId() {
         return id;
     }
 
-    public void setId(AppointmentParticipantsPK id) {
+    public void setId(AppointmentChildParticipantPK id) {
         this.id = id;
     }
 
@@ -49,14 +49,6 @@ public class AppointmentParticipants {
 
     public void setChild(Child child) {
         this.child = child;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
     }
 
     public Appointment getAppointment() {

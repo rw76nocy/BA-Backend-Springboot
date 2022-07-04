@@ -29,14 +29,25 @@ public class LivingGroup {
     @JsonIgnore
     private List<Person> employees = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH}, orphanRemoval = true)
+    @JoinColumn(name = "appointment_type_id", nullable = true)
+    private AppointmentType defaultType;
+
+    @OneToMany( mappedBy = "livingGroup", cascade = CascadeType.REFRESH, orphanRemoval = true)
+    @JsonIgnore
+    private List<AppointmentType> appointmentTypes = new ArrayList<>();
+
     public LivingGroup() {
 
     }
 
-    public LivingGroup(String name, List<Child> children, List<Person> employees) {
+    public LivingGroup(String name, List<Child> children, List<Person> employees, AppointmentType defaultType,
+                       List<AppointmentType> appointmentTypes) {
         this.name = name;
         this.children = children;
         this.employees = employees;
+        this.defaultType = defaultType;
+        this.appointmentTypes = appointmentTypes;
     }
 
     public Long getId() {
@@ -69,5 +80,21 @@ public class LivingGroup {
 
     public void setEmployees(List<Person> employees) {
         this.employees = employees;
+    }
+
+    public AppointmentType getDefaultType() {
+        return defaultType;
+    }
+
+    public void setDefaultType(AppointmentType defaultType) {
+        this.defaultType = defaultType;
+    }
+
+    public List<AppointmentType> getAppointmentTypes() {
+        return appointmentTypes;
+    }
+
+    public void setAppointmentTypes(List<AppointmentType> appointmentTypes) {
+        this.appointmentTypes = appointmentTypes;
     }
 }
