@@ -1,5 +1,7 @@
 package de.phoenix.wgtest.controller.management;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import de.phoenix.wgtest.annotations.MeasureTime;
 import de.phoenix.wgtest.model.management.Appointment;
 import de.phoenix.wgtest.model.management.AppointmentType;
 import de.phoenix.wgtest.payload.request.CreateAppointmentRequest;
@@ -20,17 +22,40 @@ public class AppointmentController {
     @Autowired
     AppointmentService appointmentService;
 
+    @MeasureTime
     @GetMapping( value = "/get/all/{livingGroup}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Appointment> getAppointmentsByLivingGroup(@PathVariable String livingGroup) {
         return appointmentService.getAppointmentsByLivingGroup(livingGroup);
     }
 
+    @MeasureTime
+    @PostMapping("/check")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> checkOverlaps(@RequestBody CreateAppointmentRequest request) {
+        return appointmentService.checkOverlaps(request);
+    }
+
+    @PostMapping("/alternative")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Appointment getAlternative(@RequestBody CreateAppointmentRequest request) {
+        return appointmentService.getAlternative(request);
+    }
+
+    @MeasureTime
     @PostMapping("/add")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> addAppointment(@RequestBody CreateAppointmentRequest request) {
         return appointmentService.insertAppointment(request);
     }
+
+    @PostMapping("/update")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateAppointment(@RequestBody CreateAppointmentRequest request) {
+        return appointmentService.updateAppointment(request);
+    }
+
+    @MeasureTime
     @DeleteMapping(value = "/delete/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {

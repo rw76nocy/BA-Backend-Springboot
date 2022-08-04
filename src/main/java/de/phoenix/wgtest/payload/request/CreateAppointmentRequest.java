@@ -6,66 +6,60 @@ import de.phoenix.wgtest.model.management.LivingGroup;
 import de.phoenix.wgtest.model.management.Person;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
 
 public class CreateAppointmentRequest {
+
+    private Long id;
 
     @NotBlank
     private String title;
 
     @NotBlank
-    private String startDate;
+    private Date startDate;
 
     @NotBlank
-    private String startTime;
+    private Date endDate;
 
-    @NotBlank
-    private String endDate;
-
-    @NotBlank
-    private String endTime;
-
-    @NotBlank
     private String location;
 
     @NotBlank
     private AppointmentType appointmentType;
 
-    @NotBlank
-    private String hasInterval;
-
-    @NotBlank
-    private String interval;
-
-    @NotBlank
-    private String intervalEnd;
+    private String rRule;
 
     private LivingGroup livingGroup;
 
-    private List<Person> employees;
+    @NotBlank
+    private List<String> members;
 
-    private List<Child> children;
+    private List<String> children;
 
     public CreateAppointmentRequest() {
     }
 
-    public CreateAppointmentRequest(String title, String startDate, String startTime, String endDate, String endTime,
-                                    String location, AppointmentType appointmentType, String hasInterval, String interval,
-                                    String intervalEnd, LivingGroup livingGroup, List<Person> employees,
-                                    List<Child> children) {
+    public CreateAppointmentRequest(Long id, String title, Date startDate, Date endDate, String location,
+                                    AppointmentType appointmentType, String rRule, LivingGroup livingGroup,
+                                    List<String> members, List<String> children) {
+        this.id = id;
         this.title = title;
         this.startDate = startDate;
-        this.startTime = startTime;
         this.endDate = endDate;
-        this.endTime = endTime;
         this.location = location;
         this.appointmentType = appointmentType;
-        this.hasInterval = hasInterval;
-        this.interval = interval;
-        this.intervalEnd = intervalEnd;
+        this.rRule = rRule;
         this.livingGroup = livingGroup;
-        this.employees = employees;
+        this.members = members;
         this.children = children;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -76,36 +70,20 @@ public class CreateAppointmentRequest {
         this.title = title;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 
     public String getLocation() {
@@ -124,28 +102,12 @@ public class CreateAppointmentRequest {
         this.appointmentType = appointmentType;
     }
 
-    public String hasInterval() {
-        return hasInterval;
+    public String getrRule() {
+        return rRule;
     }
 
-    public void setHasInterval(String hasInterval) {
-        this.hasInterval = hasInterval;
-    }
-
-    public String getInterval() {
-        return interval;
-    }
-
-    public void setInterval(String interval) {
-        this.interval = interval;
-    }
-
-    public String getIntervalEnd() {
-        return intervalEnd;
-    }
-
-    public void setIntervalEnd(String intervalEnd) {
-        this.intervalEnd = intervalEnd;
+    public void setrRule(String rRule) {
+        this.rRule = rRule;
     }
 
     public LivingGroup getLivingGroup() {
@@ -156,19 +118,19 @@ public class CreateAppointmentRequest {
         this.livingGroup = livingGroup;
     }
 
-    public List<Person> getEmployees() {
-        return employees;
+    public List<String> getMembers() {
+        return members;
     }
 
-    public void setEmployees(List<Person> employees) {
-        this.employees = employees;
+    public void setMembers(List<String> members) {
+        this.members = members;
     }
 
-    public List<Child> getChildren() {
+    public List<String> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Child> children) {
+    public void setChildren(List<String> children) {
         this.children = children;
     }
 }

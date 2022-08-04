@@ -23,7 +23,6 @@ public class Appointment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
 
-    @NotBlank
     @Size(max = 200)
     private String location;
 
@@ -31,15 +30,8 @@ public class Appointment {
     @JoinColumn(name = "appointment_type_id", nullable = false)
     private AppointmentType appointmentType;
 
-    @NotBlank
-    private String hasInterval;
-
-    // interval is reserved in mysql -.-
-    @Enumerated(EnumType.STRING)
-    private EInterval intervall;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date intervalEnd;
+    @Size(max = 500)
+    private String rRule;
 
     @ManyToOne( fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "living_group_id", nullable = false)
@@ -57,7 +49,7 @@ public class Appointment {
     }
 
     public Appointment(String title, Date startDate, Date endDate, String location, AppointmentType appointmentType,
-                       String hasInterval, EInterval intervall, Date intervalEnd, LivingGroup livingGroup,
+                       String rRule, LivingGroup livingGroup,
                        List<AppointmentPersonParticipant> appointmentPersonParticipants,
                        List<AppointmentChildParticipant> appointmentChildParticipants) {
         this.title = title;
@@ -65,9 +57,7 @@ public class Appointment {
         this.endDate = endDate;
         this.location = location;
         this.appointmentType = appointmentType;
-        this.hasInterval = hasInterval;
-        this.intervall = intervall;
-        this.intervalEnd = intervalEnd;
+        this.rRule = rRule;
         this.livingGroup = livingGroup;
         this.appointmentPersonParticipants = appointmentPersonParticipants;
         this.appointmentChildParticipants = appointmentChildParticipants;
@@ -121,28 +111,12 @@ public class Appointment {
         this.appointmentType = appointmentType;
     }
 
-    public String hasInterval() {
-        return hasInterval;
+    public String getrRule() {
+        return rRule;
     }
 
-    public void setHasInterval(String hasInterval) {
-        this.hasInterval = hasInterval;
-    }
-
-    public EInterval getIntervall() {
-        return intervall;
-    }
-
-    public void setIntervall(EInterval intervall) {
-        this.intervall = intervall;
-    }
-
-    public Date getIntervalEnd() {
-        return intervalEnd;
-    }
-
-    public void setIntervalEnd(Date intervalEnd) {
-        this.intervalEnd = intervalEnd;
+    public void setrRule(String rRule) {
+        this.rRule = rRule;
     }
 
     public LivingGroup getLivingGroup() {
@@ -173,8 +147,16 @@ public class Appointment {
         appointmentPersonParticipants.remove(app);
     }
 
+    public void removePersonParticipants(List<AppointmentPersonParticipant> apps) {
+        appointmentPersonParticipants.removeAll(apps);
+    }
+
     public void removeChildParticipant(AppointmentChildParticipant acp) {
         appointmentChildParticipants.remove(acp);
+    }
+
+    public void removeChildParticipants(List<AppointmentChildParticipant> acps) {
+        appointmentChildParticipants.removeAll(acps);
     }
 }
 
