@@ -13,7 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class AppointmentService {
         return appointmentRepository.findAllByLivingGroup(lg);
     }
 
-    public ResponseEntity<?> checkOverlaps(CreateAppointmentRequest request) {
+    public Set<AppointmentOverlapResponse> checkOverlaps(CreateAppointmentRequest request) {
         LivingGroup lg = livingGroupRepository.findByName(request.getLivingGroup().getName()).orElse(null);
         Date startDate = request.getStartDate();
         Date endDate = request.getEndDate();
@@ -60,9 +61,14 @@ public class AppointmentService {
                 lg, startDate, endDate, startDate, endDate, startDate, endDate
         );
 
+        //for updating, remove the appointment with the same id
+        if (request.getId() != null && request.getId() != 0L) {
+            concerned.removeIf(a -> a.getId().equals(request.getId()));
+        }
+
         //if there are no time overlaps, return empty set
         if (concerned.isEmpty()) {
-            return ResponseEntity.ok(new HashSet<>());
+            return new HashSet<>();
         }
 
         //load persons und children, only if the are time overlaps
@@ -82,7 +88,7 @@ public class AppointmentService {
             }
         }
 
-        return ResponseEntity.ok(responses);
+        return responses;
     }
 
     private Set<String> getMemberOverlaps(Appointment a, HashSet<Person> members) {
@@ -105,10 +111,83 @@ public class AppointmentService {
         return StreamEx.of(copy).map(Child::getFullName).toSet();
     }
 
-    public Appointment getAlternative(CreateAppointmentRequest request) {
-        //TODO hier dann eine Liste/Set von 0-5 Alternativen zurückgeben!
-        //TODO erstmal zum testen nen leeren Termin
-        return new Appointment();
+    public List<CreateAppointmentRequest> getEarlierAlternatives(CreateAppointmentRequest request, long minutes) {
+        List<CreateAppointmentRequest> alternatives = new ArrayList<>();
+
+        Instant start = request.getStartDate().toInstant();
+        ZonedDateTime lower = ZonedDateTime.ofInstant(start, ZoneId.systemDefault());
+        ZonedDateTime lowerLdt = lower.withHour(7).withMinute(0);
+        Instant lowerLimit = lowerLdt.toInstant();
+
+        Instant newStart = request.getStartDate().toInstant().minus(minutes, ChronoUnit.MINUTES);
+        Instant newEnd = request.getEndDate().toInstant().minus(minutes, ChronoUnit.MINUTES);
+
+        //wenn unteres Limit erreicht ist oder 5 Alternativen gefunden wurden
+        while (request.getStartDate().toInstant().isAfter(lowerLimit) && alternatives.size() < 5) {
+            request.setStartDate(Date.from(newStart));
+            request.setEndDate(Date.from(newEnd));
+
+            CreateAppointmentRequest newReq = new CreateAppointmentRequest();
+            newReq.setId(request.getId());
+            newReq.setTitle(request.getTitle());
+            newReq.setStartDate(request.getStartDate());
+            newReq.setEndDate(request.getEndDate());
+            newReq.setLocation(request.getLocation());
+            newReq.setAppointmentType(request.getAppointmentType());
+            newReq.setrRule(request.getrRule());
+            newReq.setLivingGroup(request.getLivingGroup());
+            newReq.setMembers(request.getMembers());
+            newReq.setChildren(request.getChildren());
+
+            Set<AppointmentOverlapResponse> overlaps = checkOverlaps(request);
+            if (overlaps.isEmpty()) {
+                alternatives.add(newReq);
+            }
+
+            newStart = request.getStartDate().toInstant().minus(minutes, ChronoUnit.MINUTES);
+            newEnd = request.getEndDate().toInstant().minus(minutes, ChronoUnit.MINUTES);
+        }
+
+        return alternatives;
+    }
+
+    public List<CreateAppointmentRequest> getLaterAlternatives(CreateAppointmentRequest request, long minutes) {
+        List<CreateAppointmentRequest> alternatives = new ArrayList<>();
+
+        Instant end = request.getEndDate().toInstant();
+        ZonedDateTime upper = ZonedDateTime.ofInstant(end, ZoneId.systemDefault());
+        ZonedDateTime upperLdt = upper.withHour(20).withMinute(0);
+        Instant upperLimit = upperLdt.toInstant();
+
+        Instant newStart = request.getStartDate().toInstant().plus(minutes, ChronoUnit.MINUTES);
+        Instant newEnd = request.getEndDate().toInstant().plus(minutes, ChronoUnit.MINUTES);
+
+        while ((request.getEndDate().toInstant().isBefore(upperLimit) || request.getEndDate().toInstant().equals(upperLimit)) && alternatives.size() < 5) {
+            request.setStartDate(Date.from(newStart));
+            request.setEndDate(Date.from(newEnd));
+
+            CreateAppointmentRequest newReq = new CreateAppointmentRequest();
+            newReq.setId(request.getId());
+            newReq.setTitle(request.getTitle());
+            newReq.setStartDate(request.getStartDate());
+            newReq.setEndDate(request.getEndDate());
+            newReq.setLocation(request.getLocation());
+            newReq.setAppointmentType(request.getAppointmentType());
+            newReq.setrRule(request.getrRule());
+            newReq.setLivingGroup(request.getLivingGroup());
+            newReq.setMembers(request.getMembers());
+            newReq.setChildren(request.getChildren());
+
+            Set<AppointmentOverlapResponse> overlaps = checkOverlaps(request);
+            if (overlaps.isEmpty()) {
+                alternatives.add(newReq);
+            }
+
+            newStart = request.getStartDate().toInstant().plus(minutes, ChronoUnit.MINUTES);
+            newEnd = request.getEndDate().toInstant().plus(minutes, ChronoUnit.MINUTES);
+        }
+
+        return alternatives;
     }
 
     @Transactional

@@ -1,11 +1,11 @@
 package de.phoenix.wgtest.controller.management;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import de.phoenix.wgtest.annotations.MeasureTime;
 import de.phoenix.wgtest.model.management.Appointment;
 import de.phoenix.wgtest.model.management.AppointmentType;
 import de.phoenix.wgtest.payload.request.CreateAppointmentRequest;
 import de.phoenix.wgtest.payload.request.CreateAppointmentTypeRequest;
+import de.phoenix.wgtest.payload.response.AppointmentOverlapResponse;
 import de.phoenix.wgtest.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -32,14 +33,20 @@ public class AppointmentController {
     @MeasureTime
     @PostMapping("/check")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public ResponseEntity<?> checkOverlaps(@RequestBody CreateAppointmentRequest request) {
+    public Set<AppointmentOverlapResponse> checkOverlaps(@RequestBody CreateAppointmentRequest request) {
         return appointmentService.checkOverlaps(request);
     }
 
-    @PostMapping("/alternative")
+    @PostMapping("/alternative/earlier")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public Appointment getAlternative(@RequestBody CreateAppointmentRequest request) {
-        return appointmentService.getAlternative(request);
+    public List<CreateAppointmentRequest> getEarlierAlternatives(@RequestBody CreateAppointmentRequest request) {
+        return appointmentService.getEarlierAlternatives(request, 30);
+    }
+
+    @PostMapping("/alternative/later")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<CreateAppointmentRequest> getLaterAlternatives(@RequestBody CreateAppointmentRequest request) {
+        return appointmentService.getLaterAlternatives(request, 30);
     }
 
     @MeasureTime
