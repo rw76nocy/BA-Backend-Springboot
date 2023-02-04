@@ -35,7 +35,6 @@ public class Institution implements ReferenceObject {
     @JoinColumn( name = "address_id", nullable = true)
     private Address address;
 
-    //FETCHTYPE.LAZY hier ganz wichtig, sonst wird zuviel unnötiges Zeug geladen!!!!!!!!!
     @OneToMany(mappedBy = "institution", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonIgnore
