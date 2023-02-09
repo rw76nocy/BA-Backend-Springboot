@@ -9,13 +9,15 @@ public class JwtResponse {
     private String username;
     private String email;
     private List<String> roles;
+    private long expiration;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles, long expiration) {
         this.token = accessToken;
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
+        this.expiration = expiration;
     }
 
     public String getAccessToken() {
@@ -60,5 +62,13 @@ public class JwtResponse {
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public long getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(long expiration) {
+        this.expiration = expiration;
     }
 }
