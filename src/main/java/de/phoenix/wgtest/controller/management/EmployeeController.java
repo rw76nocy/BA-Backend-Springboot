@@ -19,49 +19,49 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<Person> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
     @GetMapping( value = "/get/employee/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public Person getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
 
     @GetMapping( value = "/get/supervisor/all/{livingGroup}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<Person> getAllEmployeesByLivingGroup(@PathVariable String livingGroup) {
         return employeeService.getAllEmployeesByLivingGroup(livingGroup);
     }
 
     @GetMapping( value = "/get/all/{livingGroup}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<Person> getEmployeesByLivingGroup(@PathVariable String livingGroup) {
         return employeeService.getEmployeesByLivingGroup(livingGroup);
     }
 
     @GetMapping( value = "/get/{livingGroup}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<Person> getEmployeesByLivingGroupWithoutAccount(@PathVariable String livingGroup) {
         return employeeService.getEmployeesByLivingGroupWithoutAccount(livingGroup);
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> addEmployee(@Valid @RequestBody Person person) {
         return employeeService.addEmployee(person);
     }
 
     @PutMapping(value = "/put/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> updateEmployee(@PathVariable Long id, @Valid @RequestBody Person person) {
         return employeeService.updateEmployee(id, person);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
         return employeeService.deleteEmployee(id);
     }

@@ -18,25 +18,25 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<User> getAllAccounts() {
         return accountService.getAllAccounts();
     }
 
     @GetMapping( value = "get/user/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public User getUserAccountById(@PathVariable Long id) {
         return accountService.getUserAccountById(id);
     }
 
     @GetMapping( value = "/get/{livingGroup}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<User> getUserAccountByLivingGroup(@PathVariable String livingGroup) {
         return accountService.getUserAccountByLivingGroup(livingGroup);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteAccount(@PathVariable Long id) {
         return accountService.deleteAccount(id);
     }

@@ -19,13 +19,13 @@ public class LivingGroupController {
     LivingGroupService livingGroupService;
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<LivingGroup> getAllLivingGroups() {
         return livingGroupService.getAllLivingGroups();
     }
 
     @GetMapping("/get/{name}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<LivingGroup> getLivingGroupByName(@PathVariable String name) {
         return livingGroupService.getLivingGroupByName(name);
     }

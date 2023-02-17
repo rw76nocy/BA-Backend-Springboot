@@ -21,25 +21,25 @@ public class ChildrenController {
     ChildrenService childrenService;
 
     @GetMapping( value = "/get/all/{livingGroup}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public List<Child> getChildrenByLivingGroup(@PathVariable String livingGroup) {
         return childrenService.getChildrenByLivingGroup(livingGroup);
     }
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> addChild(@RequestBody CreateChildRequest request) {
         return childrenService.insertChild(request);
     }
 
     @PostMapping("/update")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> updateChild(@RequestBody CreateChildRequest request) {
         return childrenService.updateChild(request);
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteChild(@PathVariable Long id) {
         return childrenService.deleteChild(id);
     }
