@@ -83,4 +83,8 @@ public class Role {
     public void setInstitutionRoles(List<InstitutionRole> institutionRoles) {
         this.institutionRoles = institutionRoles;
     }
+
+    public boolean isSupervisorRole() {
+        return type.equals(ERole.SUPERVISOR1) || type.equals(ERole.SUPERVISOR2);
+    }
 }

@@ -9,22 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class ReferenceObjectMap extends HashMap<ReferenceObject, RoleObject> {
+public class ReferenceObjectMap extends HashMap<RoleObject, ReferenceObject> {
 
     public ReferenceObjectMap() {
         super();
     }
 
-    public void putIfNamePresent(ReferenceObject ref, RoleObject roleObject) {
+    public void putIfNamePresent(RoleObject roleObject, ReferenceObject ref) {
         if (Objects.nonNull(ref) && Objects.nonNull(ref.getName()) && !ref.getName().equals("")) {
-            put(ref, roleObject);
+            put(roleObject, ref);
         }
     }
 
-    public void putReferenceObjectList(List<SpecifiedPersonRequest> list, ERole eRole) {
+    public void putReferenceObjectList(ERole eRole, List<SpecifiedPersonRequest> list) {
         for (SpecifiedPersonRequest spr : list) {
             RoleObject roleObject = new RoleObject(eRole, spr.getType());
-            putIfNamePresent(spr.getPerson(), roleObject);
+            putIfNamePresent(roleObject, spr.getPerson());
         }
     }
 }

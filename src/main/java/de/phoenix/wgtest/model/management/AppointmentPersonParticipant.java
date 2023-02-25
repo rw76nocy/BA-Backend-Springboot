@@ -58,4 +58,8 @@ public class AppointmentPersonParticipant {
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
+
+    public boolean hasFutureAppointment() {
+        return appointment.startsInFuture();
+    }
 }

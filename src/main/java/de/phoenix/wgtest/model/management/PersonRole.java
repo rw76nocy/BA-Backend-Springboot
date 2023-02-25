@@ -71,4 +71,8 @@ public class PersonRole {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public boolean hasSupervisorRole() {
+        return role.isSupervisorRole();
+    }
 }

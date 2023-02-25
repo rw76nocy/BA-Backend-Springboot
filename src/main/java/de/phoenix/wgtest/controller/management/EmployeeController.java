@@ -65,4 +65,10 @@ public class EmployeeController {
     public ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
         return employeeService.deleteEmployee(id);
     }
+
+    @GetMapping( value = "/check/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('MANAGEMENT') or hasRole('ADMIN')")
+    public boolean checkFutureAppointments(@PathVariable Long id) {
+        return employeeService.checkFutureAppointment(id);
+    }
 }

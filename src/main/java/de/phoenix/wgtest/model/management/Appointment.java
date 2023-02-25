@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.Instant;
 import java.util.*;
 
 @Entity
@@ -157,6 +158,10 @@ public class Appointment {
 
     public void removeChildParticipants(List<AppointmentChildParticipant> acps) {
         appointmentChildParticipants.removeAll(acps);
+    }
+
+    public boolean startsInFuture() {
+        return startDate.toInstant().isAfter(Instant.now());
     }
 }
 

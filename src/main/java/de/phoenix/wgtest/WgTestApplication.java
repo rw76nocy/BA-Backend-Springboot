@@ -1,6 +1,5 @@
 package de.phoenix.wgtest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.model.security.EUserRole;
 import de.phoenix.wgtest.model.security.User;
@@ -8,20 +7,14 @@ import de.phoenix.wgtest.model.security.UserRole;
 import de.phoenix.wgtest.repository.management.*;
 import de.phoenix.wgtest.repository.security.UserRepository;
 import de.phoenix.wgtest.repository.security.UserRoleRepository;
-import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class WgTestApplication implements CommandLineRunner {

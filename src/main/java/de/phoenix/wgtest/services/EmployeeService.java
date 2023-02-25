@@ -2,16 +2,20 @@ package de.phoenix.wgtest.services;
 
 import de.phoenix.wgtest.model.management.*;
 import de.phoenix.wgtest.model.security.EUserRole;
+import de.phoenix.wgtest.model.security.User;
 import de.phoenix.wgtest.model.security.UserRole;
 import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
+import de.phoenix.wgtest.repository.security.UserRepository;
 import de.phoenix.wgtest.repository.security.UserRoleRepository;
 import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
+import javax.swing.text.html.HTML;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -20,6 +24,9 @@ public class EmployeeService {
 
     @Autowired
     PersonRepository personRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     UserRoleRepository userRoleRepository;
@@ -66,6 +73,26 @@ public class EmployeeService {
             return List.of();
         }
         return StreamEx.of(personRepository.findAllByLivingGroup(lg)).filter(hasNotUser()).toList();
+    }
+
+    public List<Child> isSupervisorFor(Person person) {
+        return StreamEx.of(person.getPersonRoles())
+                .filter(PersonRole::hasSupervisorRole)
+                .map(PersonRole::getChild)
+                .toList();
+    }
+
+    public boolean hasFutureAppointments(Person person) {
+        return StreamEx.of(person.getAppointmentPersonParticipants())
+                .anyMatch(AppointmentPersonParticipant::hasFutureAppointment);
+    }
+
+    public boolean checkFutureAppointment(Long id) {
+        Person person = personRepository.findById(id).orElse(null);
+        if (person != null) {
+            return hasFutureAppointments(person);
+        }
+        return false;
     }
 
     @Transactional
@@ -138,16 +165,55 @@ public class EmployeeService {
 
     @Transactional
     public ResponseEntity<?> deleteEmployee(Long id) {
-        if (personRepository.findById(id).isEmpty()) {
+        Person person = personRepository.findById(id).orElse(null);
+        if (person == null) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Fehler: Ein Mitarbeiter mit dieser ID existiert nicht!"));
         }
 
-        personRepository.deleteById(id);
+        List<Child> supervised = isSupervisorFor(person);
+        if (!supervised.isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(formatErrorString(supervised)));
+        }
+
         removeEmployeeFromAppointments(id);
         appointmentPersonParticipantRepository.deleteByPersonId(id);
+
+        User user = userRepository.findByPerson(person).orElse(null);
+        if (user == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Der Mitarbeiter hat kein Benutzerkonto!"));
+        }
+
+        userRepository.deleteUserRolesById(user.getId());
+        userRepository.deleteByPersonId(id);
+        personRepository.deleteById(id);
+
         return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich gelöscht!"));
+    }
+
+    private String formatErrorString(List<Child> children) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<strong>");
+        sb.append("Fehler:");
+        sb.append("</strong>");
+        sb.append("<br/>");
+        sb.append("Mitarbeiter wird noch als Bezugsbetreuer verwendet für:");
+        sb.append("<br/>");
+        sb.append("<ul>");
+        for (Child c : children) {
+            sb.append("<li>");
+            sb.append(c.getFullName());
+            sb.append("</li>");
+        }
+        sb.append("</ul>");
+
+        return sb.toString();
     }
 
     private UserRole createOrLoadUserRole(EUserRole eUserRole) {
@@ -173,10 +239,14 @@ public class EmployeeService {
     private void removeEmployeeFromAppointments(Long personId) {
         Person person = personRepository.getById(personId);
         List<AppointmentPersonParticipant> all = appointmentPersonParticipantRepository.findAllByPerson(person);
+        appointmentPersonParticipantRepository.deleteByPersonId(personId);
         for (AppointmentPersonParticipant app : all) {
-            //TODO Wenn Mitarbeiter der einzige ist, dann auch Termin löschen, hier definitiv nochmal gucken!!!!!
             Appointment a = app.getAppointment();
             a.removePersonParticipant(app);
+            if (a.getAppointmentPersonParticipants().isEmpty() && a.getAppointmentChildParticipants().isEmpty()) {
+                appointmentRepository.save(a);
+                appointmentRepository.deleteById(a.getId());
+            } else
             appointmentRepository.save(a);
         }
     }

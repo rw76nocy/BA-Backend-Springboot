@@ -182,30 +182,30 @@ public class ChildrenService {
 
     private ReferenceObjectMap getPersonReferenceObjects(CreateChildRequest request) {
         ReferenceObjectMap map = new ReferenceObjectMap();
-        map.putIfNamePresent(personRepository.getByName(request.getSuperVisor1()), new RoleObject(ERole.SUPERVISOR1));
-        map.putIfNamePresent(personRepository.getByName(request.getSuperVisor2()), new RoleObject(ERole.SUPERVISOR2));
-        map.putIfNamePresent(request.getGuardian(), new RoleObject(ERole.GUARDIAN));
-        map.putIfNamePresent(request.getAsd(), new RoleObject(ERole.ASD));
-        map.putIfNamePresent(request.getMother(), new RoleObject(ERole.MOTHER));
-        map.putIfNamePresent(request.getFather(), new RoleObject(ERole.FATHER));
-        map.putIfNamePresent(request.getChilddoctor(), new RoleObject(ERole.CHILDDOCTOR));
-        map.putReferenceObjectList(request.getReferencePersons(), ERole.REFERENCE_PERSON);
-        map.putReferenceObjectList(request.getDoctors(), ERole.DOCTOR);
-        map.putReferenceObjectList(request.getTherapists(), ERole.THERAPIST);
-        map.putReferenceObjectList(request.getPartners(), ERole.PARTNER);
+        map.putIfNamePresent(new RoleObject(ERole.SUPERVISOR1), personRepository.getByName(request.getSuperVisor1()));
+        map.putIfNamePresent(new RoleObject(ERole.SUPERVISOR2), personRepository.getByName(request.getSuperVisor2()));
+        map.putIfNamePresent(new RoleObject(ERole.GUARDIAN), request.getGuardian());
+        map.putIfNamePresent(new RoleObject(ERole.ASD), request.getAsd());
+        map.putIfNamePresent(new RoleObject(ERole.MOTHER), request.getMother());
+        map.putIfNamePresent(new RoleObject(ERole.FATHER), request.getFather());
+        map.putIfNamePresent(new RoleObject(ERole.CHILDDOCTOR), request.getChilddoctor());
+        map.putReferenceObjectList(ERole.REFERENCE_PERSON, request.getReferencePersons());
+        map.putReferenceObjectList(ERole.DOCTOR, request.getDoctors());
+        map.putReferenceObjectList(ERole.THERAPIST, request.getTherapists());
+        map.putReferenceObjectList(ERole.PARTNER, request.getPartners());
         return map;
     }
 
     private ReferenceObjectMap getInstitutionReferenceObject(CreateChildRequest request) {
         ReferenceObjectMap map = new ReferenceObjectMap();
-        map.putIfNamePresent(request.getDayCare(), new RoleObject(ERole.DAYCARE));
-        map.putIfNamePresent(request.getHealthInsurance(), new RoleObject(ERole.HEALTHINSURANCE));
-        map.putIfNamePresent(request.getFoodSupplier(), new RoleObject(ERole.FOODSUPPLIER));
-        map.putIfNamePresent(request.getDriver(), new RoleObject(ERole.DRIVER));
+        map.putIfNamePresent(new RoleObject(ERole.DAYCARE), request.getDayCare());
+        map.putIfNamePresent(new RoleObject(ERole.HEALTHINSURANCE), request.getHealthInsurance());
+        map.putIfNamePresent(new RoleObject(ERole.FOODSUPPLIER), request.getFoodSupplier());
+        map.putIfNamePresent(new RoleObject(ERole.DRIVER), request.getDriver());
         return map;
     }
 
-    private PersonRole persistPersonReferenceObject(Child child, ReferenceObject obj, RoleObject role) {
+    private PersonRole persistPersonReferenceObject(Child child, RoleObject role, ReferenceObject obj) {
         if (obj instanceof Person) {
             Person p = (Person) obj;
             if (p instanceof Asd) {
@@ -217,7 +217,7 @@ public class ChildrenService {
         return null;
     }
 
-    private InstitutionRole persistInstitutionReferenceObject(Child child, ReferenceObject obj, RoleObject role) {
+    private InstitutionRole persistInstitutionReferenceObject(Child child, RoleObject role, ReferenceObject obj) {
         if (obj instanceof Institution) {
             Institution i = (Institution) obj;
             return persistInstitutionRole(child, createOrLoadInstitution(i), role.getERole(), role.getSpecification());
