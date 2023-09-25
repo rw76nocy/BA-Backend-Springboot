@@ -76,6 +76,9 @@ public class EmployeeService {
     }
 
     public List<Child> isSupervisorFor(Person person) {
+        if (person == null) {
+            return List.of();
+        }
         return StreamEx.of(person.getPersonRoles())
                 .filter(PersonRole::hasSupervisorRole)
                 .map(PersonRole::getChild)
@@ -83,6 +86,9 @@ public class EmployeeService {
     }
 
     public boolean hasFutureAppointments(Person person) {
+        if (person == null) {
+            return false;
+        }
         return StreamEx.of(person.getAppointmentPersonParticipants())
                 .anyMatch(AppointmentPersonParticipant::hasFutureAppointment);
     }
@@ -183,14 +189,11 @@ public class EmployeeService {
         appointmentPersonParticipantRepository.deleteByPersonId(id);
 
         User user = userRepository.findByPerson(person).orElse(null);
-        if (user == null) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Fehler: Der Mitarbeiter hat kein Benutzerkonto!"));
+        if (user != null) {
+            userRepository.deleteUserRolesById(user.getId());
+            userRepository.deleteByPersonId(id);
         }
 
-        userRepository.deleteUserRolesById(user.getId());
-        userRepository.deleteByPersonId(id);
         personRepository.deleteById(id);
 
         return ResponseEntity.ok(new MessageResponse("Mitarbeiter erfolgreich gelöscht!"));

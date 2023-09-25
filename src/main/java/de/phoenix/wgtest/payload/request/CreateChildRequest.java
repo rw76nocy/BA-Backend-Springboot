@@ -3,6 +3,7 @@ package de.phoenix.wgtest.payload.request;
 import de.phoenix.wgtest.model.management.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +25,10 @@ public class CreateChildRequest {
     @Size( max = 100)
     private String lastName;
 
-    @NotBlank
+    @NotNull
     private Date birthday;
 
-    @NotBlank
+    @NotNull
     private Date entranceDate;
 
     private Date releaseDate;

@@ -161,6 +161,9 @@ public class Appointment {
     }
 
     public boolean startsInFuture() {
+        if (startDate == null) {
+            return false;
+        }
         return startDate.toInstant().isAfter(Instant.now());
     }
 }

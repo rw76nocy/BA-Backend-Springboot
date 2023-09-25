@@ -6,16 +6,14 @@ import de.phoenix.wgtest.payload.request.*;
 import de.phoenix.wgtest.payload.response.ChildResponse;
 import de.phoenix.wgtest.payload.response.MessageResponse;
 import de.phoenix.wgtest.repository.management.*;
-import de.phoenix.wgtest.services.FileStorageService;
 import one.util.streamex.EntryStream;
-import one.util.streamex.StreamEx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import java.util.*;
 
@@ -92,6 +90,20 @@ public class ChildrenService {
 
     @Transactional
     public ResponseEntity<?> insertChild(CreateChildRequest request) {
+        if (request == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Ungültige Anfrage"));
+        }
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<CreateChildRequest>> violations = validator.validate(request);
+        if (violations.size() != 0) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Fehler: Ungültige Anfrage"));
+        }
+
         String fullName = request.getFirstName() + " " + request.getLastName();
         Child child = new Child(
                 EGender.findByName(request.getGender()), request.getFirstName(), request.getLastName(),
@@ -174,7 +186,7 @@ public class ChildrenService {
     }
 
     private List<InstitutionRole> getInstitutionRoles(Child child, CreateChildRequest request) {
-        return EntryStream.of(getInstitutionReferenceObject(request))
+        return EntryStream.of(getInstitutionReferenceObjects(request))
                 .mapKeyValue((k, v) -> persistInstitutionReferenceObject(child, k, v))
                 .filter(Objects::nonNull)
                 .toList();
@@ -196,7 +208,7 @@ public class ChildrenService {
         return map;
     }
 
-    private ReferenceObjectMap getInstitutionReferenceObject(CreateChildRequest request) {
+    private ReferenceObjectMap getInstitutionReferenceObjects(CreateChildRequest request) {
         ReferenceObjectMap map = new ReferenceObjectMap();
         map.putIfNamePresent(new RoleObject(ERole.DAYCARE), request.getDayCare());
         map.putIfNamePresent(new RoleObject(ERole.HEALTHINSURANCE), request.getHealthInsurance());
